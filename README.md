@@ -6,7 +6,7 @@ Details on how to use GOAC as command line tool or as Python package can be foun
 
 ## Installation
 
-Install a Python3.10 or higher Python-environment on your system along with a Fortran compiler (e.g., gfortran7.5.0) and a corresponding OpenMP library.
+Install a Python3.10, or higher, Python-environment on your system along with a Fortran compiler (e.g., gfortran7.5.0) and a corresponding OpenMP library.
 
 ### Requirements:
 
@@ -18,7 +18,7 @@ pip install pymatgen
 pip install gurobipy
 ```
 
-For running Gorbi, please follow the offical licensing options under: https://www.gurobi.com/solutions/licensing/
+The functionalities of Gurobi required to run GOAC are freely available but corresponding licences should be checked. For using Gorbi for optimization, please follow the offical licensing options, including free academic licenses, under: https://www.gurobi.com/solutions/licensing/
 
 ### Compilation of Fortran Code
 
@@ -38,7 +38,7 @@ Depending on your system you should obtain an optimized cif "out-0.cif" and a fi
 
 ## Citing GOAC for your Research
 
-If find GOAC helpful for your research please considere citing the packages GOAC is working with as well as citing the GOAC code directly by the following reference:
+If you find GOAC helpful for your research, please considere citing the packages GOAC is working with as well as citing the GOAC code directly by the following reference:
 [DOI]
 
 
