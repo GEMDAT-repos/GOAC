@@ -25,7 +25,7 @@ The functionalities of Gurobi required to run GOAC are freely available but corr
 If all requirements are satisfied, clone the repository and run the following commands in your copy (in case you want to use another compiler adjust settings accodingly):
 ```sh
 cd GOAC
-python -m numpy.f2py -c --fcompiler=gfortran --f90flags='-fopenmp -Wall' -m GOAC.f90
+python -m numpy.f2py -c --fcompiler=gfortran --f90flags='-fopenmp -Wall' GOAC.f90 -m GOAC
 cd ..
 ```
 
