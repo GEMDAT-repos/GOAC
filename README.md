@@ -1,8 +1,12 @@
-# Sample GitLab Project
+#GOAC: Global Optimization of Atomistic Arrangements by Coulomb Energies
 
-This sample project shows how a project in GitLab looks for demonstration purposes. It contains issues, merge requests and Markdown files in many branches,
-named and filled with lorem ipsum.
+GOAC is a Python-based command line tool to approach optimization of Coulomb energies for crystall structures with configurational disorders, e.g., partial site occupations. GOAC's core consists of serveral Fortran based heurstics that allow for parallelization by OpenMP. Moreover, GOAC can be used to wrap Atomistic Arrangement problems to existing software such as Gurobi. Details on how to use GOAC as command line tool or as Python package can be found in the Documentation PDF file and scientific details are availabe in the corresponding publication under: [DOI]
 
-You can look around to get an idea how to structure your project and, when done, you can safely delete this project.
+##Installation
+Install a Python3.10 or higher Python-environment on your system along with a Fortran compiler (e.g., gfortran7.5.0) and a corresponding OpenMP library.
 
-[Learn more about creating GitLab projects.](https://docs.gitlab.com/ee/gitlab-basics/create-project.html)
+#Requirements:
+Some Python package are required before installing GOAC.
+```sh
+pip install pymatgen
+```
