@@ -18,7 +18,7 @@ pip install pymatgen
 pip install gurobipy
 ```
 
-The functionalities of Gurobi required to run GOAC are freely available but corresponding licences should be checked. For using Gorbi for optimization, please follow the offical licensing options, including free academic licenses, under: https://www.gurobi.com/solutions/licensing/
+The functionalities of Gurobi required to run GOAC are freely available by installing the package listed above but corresponding licences should be checked. For using Gorbi for optimization, please follow the offical licensing options, including free academic licenses, under: https://www.gurobi.com/solutions/licensing/
 
 ### Compilation of Fortran Code
 
