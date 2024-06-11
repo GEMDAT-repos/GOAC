@@ -1,3 +1,12 @@
+__author__ = "Konstantin Köster"
+__copyright__ = "Copyright 2024, GOAC"
+__credits__ = ["Konstantin Köster", "Tobias Binninger", "Payam Kaghazch"]
+__license__ = "MIT"
+__version__ = "0.1.0"
+__maintainer__ = ""
+__email__ = "p.kaghazchi@fz-juelich.de"
+__status__ = "Development"
+
 from GOAC import random_samples
 from GOAC import branch_n_bound
 from GOAC import local_minimizer

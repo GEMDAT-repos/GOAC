@@ -1,3 +1,12 @@
+!__author__ = "Konstantin Köster"
+!__copyright__ = "Copyright 2024, GOAC"
+!__credits__ = ["Konstantin Köster", "Tobias Binninger", "Payam Kaghazch"]
+!__license__ = "MIT"
+!__version__ = "0.1.0"
+!__maintainer__ = ""
+!__email__ = "p.kaghazchi@fz-juelich.de"
+!__status__ = "Development"
+
 !Routine for Greedy heuristic
 subroutine greedy(species_nums, species_occs, shared_sites, const_e, a_e, b_e, n, & 
                   energies, solutions, max_site_num, num_species)
