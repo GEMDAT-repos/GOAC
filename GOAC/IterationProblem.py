@@ -474,7 +474,7 @@ class Iteration_Problem():
         for i in range(len(all_combinations)):
             total_combinations *= np.power(10, all_combinations[i])
         total_combinations = np.log10(total_combinations)
-        line = "Total log10(combinations) of the problem are: " + str(total_combinations) + ".\n"
+        line = "Total log10(configurations) of the problem are: " + str(total_combinations) + ".\n"
         out += line
 
         return out
