@@ -1,3 +1,4 @@
+.gitignore
 tests
 GOAC/Ewald
 GOAC/__pycache__
