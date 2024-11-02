@@ -12,13 +12,12 @@ Install a Python3.10, or higher, Python-environment on your system along with a 
 
 Next to standard Python packages such as time, warnings, re, copy, and optparse some more Python package are required before installing GOAC:
 ```sh
-pip install joblib
 pip install numpy
 pip install pymatgen
 pip install gurobipy
 ```
 
-The functionalities of Gurobi required to run GOAC are freely available by installing the package listed above but corresponding licences should be checked. For using Gurobi for optimization, please follow the offical licensing options, including free academic licenses, under: https://www.gurobi.com/solutions/licensing/
+The functionalities of Gurobi required to run GOAC are freely available by installing the package listed above but corresponding licences should be checked. GOAC can also be used completely without Gurobi by relying on the internal solvers. For using Gurobi for optimization, please follow the offical licensing options, including free academic licenses, under: https://www.gurobi.com/solutions/licensing/
 
 ### Compilation of Fortran Code
 
@@ -26,6 +25,7 @@ If all requirements are satisfied, clone the repository and run the following co
 ```sh
 cd GOAC
 python -m numpy.f2py -c --fcompiler=gfortran --f90flags='-fopenmp -Wall' -lgomp GOAC.f90 -m GOAC
+python -m numpy.f2py -c --fcompiler=gfortran --f90flags='-fopenmp -Wall' -lgomp ABCEwald.f90 -m ABCEwald
 cd ..
 ```
 
@@ -33,7 +33,7 @@ cd ..
 
 To test your installation, run the following command:
 ```sh
-python GOAC/ -f LCO.cif -p "Li*=1.0" -p "Co*=3.5" -p "O*=-2.0" -s "random-mc" -n 4 -w 1 -c 4
+python GOAC/ -f LCO.cif -p "Li*=1.0" -p "Co*=3.5" -p "O*=-2.0" -s "random-mc" -n 4 -w 1
 ```
 Depending on your system you should obtain an optimized cif "out-0.cif" and a file "out-summary.txt" within a few seconds. For more advanced usage of the GOAC code please have a look at the Documentation PDF file in this repository.
 
