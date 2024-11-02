@@ -98,7 +98,7 @@ def main():
             "#*# Global Optimization of Atomistic Configurations by Coulomb #*#\n"
             "#*#                                                            #*#\n"
             "#*#  Konstantin Köster, Tobias Binninger, and Payam Kaghazchi  #*#\n"
-            "#*#              DOI:                                          #*#\n"
+            "#*#       DOI: https://doi.org/10.48550/arXiv.2409.08808       #*#\n"
             "#*#                                                            #*#\n"
             "##################################################################\n"
             "##################################################################\n")
