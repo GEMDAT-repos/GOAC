@@ -10,10 +10,9 @@ __status__ = "Development"
 from IterationProblem import Iteration_Problem
 
 class Solver():
-    def __init__(self, name:str, problem:Iteration_Problem, cores:int, n=1, w=False):
+    def __init__(self, name:str, problem:Iteration_Problem, n=1, w=False):
         self.name = name
         self.problem = problem
-        self.cores = cores
         self.n = n
         self.write = w
 

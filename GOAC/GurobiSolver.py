@@ -12,12 +12,11 @@ from IterationProblem import Iteration_Problem
 import gurobipy as gp
 from gurobipy import GRB
 import numpy as np
-import time
 
 
 class Gurobi_Solver(Solver):
-    def __init__(self, name:str, problem:Iteration_Problem, cores:int, n=1, w=False):
-        super().__init__(name=name, problem=problem, cores=cores, n=n, w=w)
+    def __init__(self, name:str, problem:Iteration_Problem, n=1, w=False):
+        super().__init__(name=name, problem=problem, n=n, w=w)
 
     def initialize(self, options:str=None):
         opt = {}
@@ -35,7 +34,7 @@ class Gurobi_Solver(Solver):
             opt['MIPFocus'] = 1
             opt['MIPGap'] = 0.0
             opt['MIPGapAbs'] = 0.0
-            opt['Threads'] = self.cores
+            opt['Threads'] = 4
             opt['PoolSearchMode'] = 2
             opt['PoolSolutions'] = self.n
             opt['TimeLimit'] = 300
@@ -47,7 +46,7 @@ class Gurobi_Solver(Solver):
             opt['MIPFocus'] = 2
             opt['MIPGap'] = 0.0
             opt['MIPGapAbs'] = 0.0
-            opt['Threads'] = self.cores
+            opt['Threads'] = 4
             opt['PoolSearchMode'] = 2
             opt['PoolSolutions'] = self.n
 

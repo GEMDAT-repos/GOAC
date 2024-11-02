@@ -8,7 +8,7 @@
 !__status__ = "Development"
 
 !Routine for Greedy heuristic
-subroutine greedy(species_nums, species_occs, shared_sites, const_e, a_e, b_e, n, & 
+subroutine greedy(species_nums, species_occs, shared_sites, const_e, a_e, b_e, n, tol, & 
                   energies, solutions, max_site_num, num_species)
         !$ use omp_lib
         implicit none
@@ -17,7 +17,7 @@ subroutine greedy(species_nums, species_occs, shared_sites, const_e, a_e, b_e, n
         !f2py intent(in) max_site_num, num_species
         integer, intent(in):: species_nums(num_species), species_occs(num_species)
         logical, intent(in):: shared_sites(num_species, num_species)
-        real(kind=prec), intent(in):: const_e
+        real(kind=prec), intent(in):: const_e, tol
         real(kind=prec), intent(in):: a_e(num_species, max_site_num), &
                                       b_e(num_species, max_site_num, num_species, max_site_num)
         logical:: best_solutions(n, n, num_species, max_site_num), &
@@ -52,10 +52,12 @@ subroutine greedy(species_nums, species_occs, shared_sites, const_e, a_e, b_e, n
                                                         current_energy = energy(num_species, max_site_num, species_nums, &
                                                                                 current_solution, const_e, a_e, b_e)
                                                         if(current_energy .lt. MAXVAL(best_energies(l,:),1)) then
+                                                        if(MINVAL(ABS(best_energies(l,:)-current_energy),1) .gt. tol) then
                                                                 best_solutions(l,MAXLOC(best_energies(l,:),1),:,:) &
                                                                               = current_solution
                                                                 best_energies(l,MAXLOC(best_energies(l,:),1)) &
                                                                               = current_energy
+                                                        end if
                                                         end if
                                                 end if
                                         end do
@@ -68,17 +70,19 @@ subroutine greedy(species_nums, species_occs, shared_sites, const_e, a_e, b_e, n
                 do i=1, n
                         do j=1, n
                                 if(best_energies(i,j) .lt. MAXVAL(energies,1)) then
+                                if(MINVAL(ABS(energies-best_energies(i,j)),1) .gt. tol) then
                                         if(solution_unique(num_species, max_site_num, n, species_nums, &
                                                            best_solutions(i,j,:,:), solutions)) then
                                                 solutions(MAXLOC(energies,1),:,:) = best_solutions(i,j,:,:)
                                                 energies(MAXLOC(energies,1)) = best_energies(i,j)
                                         end if
                                 end if
+                                end if
                         end do
                 end do
         end do
         if(kill .ge. 10d7) then
-                write(*,*) "WARNING: Subroutine killed because of too many while iteations"
+                write(*,*) "WARNING: Subroutine killed because of too many while iterations"
         end if
         return
 end subroutine greedy
@@ -145,7 +149,7 @@ subroutine random_samples(species_nums, species_occs, shared_sites, const_e, a_e
         return
 end subroutine random_samples
 
-subroutine local_minimizer(species_nums, species_occs, shared_sites, solutions, const_e, a_e, b_e, n, &
+subroutine local_minimizer(species_nums, species_occs, shared_sites, solutions, const_e, a_e, b_e, n, tol, &
                            stop_time, stop_no_improve_steps, &
                            max_site_num, num_species, n_solutions, lowest_energies, lowest_solutions)
         !$ use omp_lib
@@ -156,7 +160,7 @@ subroutine local_minimizer(species_nums, species_occs, shared_sites, solutions, 
         integer, intent(in):: species_nums(num_species), species_occs(num_species)
         logical, intent(in):: shared_sites(num_species, num_species), &
                               solutions(n_solutions, num_species, max_site_num)
-        real(kind=prec), intent(in):: const_e
+        real(kind=prec), intent(in):: const_e, tol
         real(kind=prec), intent(in):: a_e(num_species, max_site_num), &
                                       b_e(num_species, max_site_num, num_species, max_site_num)
         logical, allocatable:: opt_solutions(:,:,:,:)
@@ -166,16 +170,15 @@ subroutine local_minimizer(species_nums, species_occs, shared_sites, solutions, 
         !f2py intent(out) lowest_energies, lowest_solutions
         logical:: energy_changed, solution_unique
         integer:: i,j,k,kill, steps_no_improve
-        real(kind=prec):: energy, start, now, last, write_time=5d0, start_time, prev_min_energy
+        real(kind=prec):: energy, start, now, start_time, prev_min_energy
 
         call cpu_time(start)
         start_time = OMP_GET_WTIME()
-        last = start
         allocate(opt_solutions(n_solutions, n, num_species, max_site_num))
         allocate(opt_energies(n_solutions, n))
         lowest_energies = HUGE(1.0D+0)
         lowest_solutions = .FALSE.
-        call branch_n_bound(species_nums, species_occs, shared_sites, solutions, const_e, a_e, b_e, n, &
+        call branch_n_bound(species_nums, species_occs, shared_sites, solutions, const_e, a_e, b_e, n, tol, &
                             max_site_num, num_species, n_solutions, opt_energies, opt_solutions)
         do i=1, n_solutions
                 lowest_solutions(i,1,:,:) = solutions(i,:,:) 
@@ -195,7 +198,7 @@ subroutine local_minimizer(species_nums, species_occs, shared_sites, solutions, 
         allocate(opt_energies(n, n))
         steps_no_improve = 0
         prev_min_energy = HUGE(1.0D+0)
-        !$OMP PARALLEL DO DEFAULT(SHARED) PRIVATE(energy_changed, kill, opt_energies, opt_solutions, j, k)
+        !$OMP PARALLEL DO DEFAULT(SHARED) PRIVATE(energy_changed, kill, opt_energies, opt_solutions, j, k, now)
         do i=1, n_solutions
                 if(stop_time .gt. 0 .and. OMP_GET_WTIME()-start_time .gt. stop_time) then
                         cycle
@@ -208,10 +211,12 @@ subroutine local_minimizer(species_nums, species_occs, shared_sites, solutions, 
                         kill = kill + 1
                         energy_changed = .FALSE.
                         call branch_n_bound(species_nums, species_occs, shared_sites, lowest_solutions(i,:,:,:), &
-                                            const_e, a_e, b_e, n, max_site_num, num_species, n, opt_energies, opt_solutions)
+                                            const_e, a_e, b_e, n, tol, max_site_num, num_species, n, &
+                                            opt_energies, opt_solutions)
                         do j=1, n
                                 do k=1, n
                                         if(opt_energies(j,k) .lt. MAXVAL(lowest_energies(i,:),1)) then
+                                        if(MINVAL(ABS(lowest_energies(i,:)-opt_energies(j,k)),1) .gt. tol) then
                                                 if(solution_unique(num_species, max_site_num, n, species_nums, &
                                                                    opt_solutions(j,k,:,:), lowest_solutions(i,:,:,:))) then
                                                         lowest_solutions(i,MAXLOC(lowest_energies(i,:),1),:,:) = & 
@@ -220,33 +225,29 @@ subroutine local_minimizer(species_nums, species_occs, shared_sites, solutions, 
                                                         energy_changed = .TRUE.
                                                 end if
                                         end if
+                                        end if
                                 end do
                         end do
                 end do
                 if(kill .ge. 10d7) then
                         write(*,*) "WARNING: Subroutine killed because of too many while iteations"
                 end if
-                if(MINVAL(lowest_energies) .eq. prev_min_energy) then
+                if(ABS(MINVAL(lowest_energies)-prev_min_energy) .lt. tol) then
                         steps_no_improve = steps_no_improve+1
                 else
                         steps_no_improve = 0
                         prev_min_energy = MINVAL(lowest_energies)
                 end if
                 call cpu_time(now)
-                if((now-last) .ge. write_time) then
-                        write(*,*) "CPU-TIME:", (now-start), "ENERGY:", MINVAL(lowest_energies)
-                        last = now
-                end if
+                write(*,*) "CPU-TIME:", (now-start), "GLOBAL-MINIMUM:", MINVAL(lowest_energies)
         end do
         !$OMP END PARALLEL DO
-        call cpu_time(now)
-        write(*,*) "CPU-TIME:", (now-start), "ENERGY:", MINVAL(lowest_energies)
         deallocate(opt_solutions)
         deallocate(opt_energies)
         return
 end subroutine local_minimizer
 
-subroutine branch_n_bound(species_nums, species_occs, shared_sites, solutions, const_e, a_e, b_e, n, & 
+subroutine branch_n_bound(species_nums, species_occs, shared_sites, solutions, const_e, a_e, b_e, n, tol, & 
                           max_site_num, num_species, n_solutions, opt_energies, opt_solutions)
         !$ use omp_lib
         implicit none
@@ -256,7 +257,7 @@ subroutine branch_n_bound(species_nums, species_occs, shared_sites, solutions, c
         integer, intent(in):: species_nums(num_species), species_occs(num_species)
         logical, intent(in):: shared_sites(num_species, num_species), &
                               solutions(n_solutions, num_species, max_site_num)
-        real(kind=prec), intent(in):: const_e
+        real(kind=prec), intent(in):: const_e, tol
         real(kind=prec), intent(in):: a_e(num_species, max_site_num), &
                                       b_e(num_species, max_site_num, num_species, max_site_num)
         logical, intent(out):: opt_solutions(n_solutions, n, num_species, max_site_num)
@@ -297,10 +298,12 @@ subroutine branch_n_bound(species_nums, species_occs, shared_sites, solutions, c
                                                 current_energy = energy(num_species, max_site_num, species_nums, &
                                                                         current_solution, const_e, a_e, b_e)
                                                 if(current_energy .lt. MAXVAL(opt_energies(l,:),1)) then
+                                                if(MINVAL(ABS(opt_energies(l,:)-current_energy),1) .gt. tol) then
                                                         opt_solutions(l,MAXLOC(opt_energies(l,:),1),:,:) &
                                                                 = current_solution
                                                         opt_energies(l,MAXLOC(opt_energies(l,:),1)) &
                                                                 = current_energy
+                                                end if
                                                 end if
                                         end if
                                 end do
@@ -430,7 +433,7 @@ function occupied(i_in, j_in, num_species, max_site_num, solution, shared_sites)
 end function occupied                
 
 !Replica Excahnge Monte Carlo run subroutine
-subroutine remc(species_nums, species_occs, shared_sites, solutions, const_e, a_e, b_e, n, t_steps, t_repeat, kT, &
+subroutine remc(species_nums, species_occs, shared_sites, solutions, const_e, a_e, b_e, n, tol, t_steps, t_repeat, kT, &
                 stop_time, stop_no_improve_steps, &
                 max_site_num, num_species, n_solutions, n_kT, final_energies, final_solutions)
         !$ use omp_lib
@@ -444,7 +447,7 @@ subroutine remc(species_nums, species_occs, shared_sites, solutions, const_e, a_
         integer, intent(in):: species_nums(num_species), species_occs(num_species)
         logical, intent(in):: shared_sites(num_species, num_species), &
                               solutions(n_solutions, num_species, max_site_num)
-        real(kind=prec), intent(in):: const_e
+        real(kind=prec), intent(in):: const_e, tol
         real(kind=prec), intent(in):: a_e(num_species, max_site_num), &
                                       b_e(num_species, max_site_num, num_species, max_site_num)
         real(kind=prec):: best_energies(n_solutions, n)
@@ -488,7 +491,8 @@ subroutine remc(species_nums, species_occs, shared_sites, solutions, const_e, a_
                 elseif(stop_no_improve_steps .gt. 0 .and. steps_no_improve .gt. stop_no_improve_steps) then
                         cycle
                 end if
-                !$OMP PARALLEL DO DEFAULT(SHARED) PRIVATE(s, i, best_energies, best_solutions, current_solutions, current_energy)
+                !$OMP PARALLEL DO DEFAULT(SHARED) PRIVATE(s, i, now, best_energies, &
+                !$OMP best_solutions, current_solutions, current_energy)
                 do k=1, n_kT
                         if(stop_time .gt. 0 .and. OMP_GET_WTIME()-start_time .gt. stop_time) then
                                 cycle
@@ -496,21 +500,23 @@ subroutine remc(species_nums, species_occs, shared_sites, solutions, const_e, a_
                                 cycle
                         end if
                         call monte_carlo(species_nums, species_occs, shared_sites, solutions_in(k,:,:,:), const_e, a_e, &
-                                         b_e, n, t_steps, kT(k), 1.d0, 10000000, t_steps+1, -1, -1, max_site_num, &
+                                         b_e, n, tol, t_steps, kT(k), 1.d0, 10000000, t_steps+1, -1, -1, max_site_num, &
                                          num_species, n_solutions, best_energies, best_solutions, current_solutions)
                         solutions_in(k,:,:,:) = current_solutions(:,:,:)
                         do s=1, n_solutions
                                 do i=1, n
                                         current_energy = best_energies(s,i)
                                         if(current_energy .lt. MAXVAL(final_energies_tmp(k,s,:),1)) then
+                                        if(MINVAL(ABS(final_energies_tmp(k,s,:)-current_energy),1) .gt. tol) then
                                                 final_solutions_tmp(k,s,MAXLOC(final_energies_tmp(k,s,:),1),:,:) &
                                                               = best_solutions(s,i,:,:)
                                                 final_energies_tmp(k,s,MAXLOC(final_energies_tmp(k,s,:),1)) &
                                                               = current_energy
                                         end if
+                                        end if
                                 end do
                                 call cpu_time(now)
-                                write(*,*) "Solution:", s, "Step:", t*t_steps, "kT:", kT(k), "Current-Energy:", &
+                                write(*,*) "Thread:", s, "Step:", t*t_steps, "kT:", kT(k), "Current-Energy:", &
                                            current_energy, "Lowest-Energy:", MINVAL(final_energies_tmp(k,s,:),1), & 
                                            "CPU-TIME:", (now-start)
                         end do
@@ -528,10 +534,12 @@ subroutine remc(species_nums, species_occs, shared_sites, solutions, const_e, a_
                                 do i=1, n
                                         current_energy = final_energies_tmp(k,s,i)
                                         if(current_energy .lt. MAXVAL(final_energies(s,:),1)) then
+                                        if(MINVAL(ABS(final_energies(s,:)-current_energy),1) .gt. tol) then
                                                 final_solutions(s,MAXLOC(final_energies(s,:),1),:,:) &
                                                               = final_solutions_tmp(k,s,i,:,:)
                                                 final_energies(s,MAXLOC(final_energies(s,:),1)) &
                                                               = current_energy
+                                        end if
                                         end if
                                 end do
                                 current_energy = energy(num_species, max_site_num, species_nums, &
@@ -548,7 +556,7 @@ subroutine remc(species_nums, species_occs, shared_sites, solutions, const_e, a_
                                                 flip = .TRUE.
                                         end if
                                         if(flip) then
-                                                write(*,*) "Exchange: Solution:", s, "kT1:", kT(k), "kT2:", kT(i)
+                                                write(*,*) "Exchange: Thread:", s, "kT1:", kT(k), "kT2:", kT(i)
                                                 buffer_solution = solutions_in(k,s,:,:)
                                                 solutions_in(k,s,:,:) = solutions_in(i,s,:,:)
                                                 solutions_in(i,s,:,:) = buffer_solution
@@ -557,20 +565,21 @@ subroutine remc(species_nums, species_occs, shared_sites, solutions, const_e, a_
                         end do
                 end do
                 !$OMP END PARALLEL DO
-                if(MINVAL(final_energies) .eq. prev_min_energy) then
+                if(ABS(MINVAL(final_energies)-prev_min_energy) .lt. tol) then
                         steps_no_improve = steps_no_improve+1
                 else
                         steps_no_improve = 0
                         prev_min_energy = MINVAL(final_energies)
                 end if
-                write(*,*) "GLOBAL-MINIMUM:", MINVAL(final_energies(:,:))
+                call cpu_time(now)
+                write(*,*) "CPU-TIME:", (now-start), "GLOBAL-MINIMUM:", MINVAL(final_energies(:,:))
         end do
         return
 end subroutine remc
 
 !Monte Carlo run subroutine
-subroutine monte_carlo(species_nums, species_occs, shared_sites, solutions, const_e, a_e, b_e, n, t_steps, kT, sim_an, &
-                       sim_an_steps, write_steps, stop_time, stop_no_improve_steps, &
+subroutine monte_carlo(species_nums, species_occs, shared_sites, solutions, const_e, a_e, b_e, n, tol, &
+                       t_steps, kT, sim_an, sim_an_steps, write_steps, stop_time, stop_no_improve_steps, &
                        max_site_num, num_species, n_solutions, best_energies, best_solutions, current_solutions)
         !$ use omp_lib
         implicit none
@@ -583,7 +592,7 @@ subroutine monte_carlo(species_nums, species_occs, shared_sites, solutions, cons
         integer, intent(in):: species_nums(num_species), species_occs(num_species)
         logical, intent(in):: shared_sites(num_species, num_species), &
                               solutions(n_solutions, num_species, max_site_num)
-        real(kind=prec), intent(in):: const_e
+        real(kind=prec), intent(in):: const_e, tol
         real(kind=prec), intent(in):: a_e(num_species, max_site_num), &
                                       b_e(num_species, max_site_num, num_species, max_site_num)
         real(kind=prec), intent(out):: best_energies(n_solutions, n)
@@ -615,7 +624,7 @@ subroutine monte_carlo(species_nums, species_occs, shared_sites, solutions, cons
         steps_no_improve = 0
         prev_min_energy = HUGE(1.0D+0)
         !$OMP PARALLEL DO DEFAULT(SHARED) PRIVATE(current_solution, new_solution, current_energy, new_energy, current_kT, &
-        !$OMP t, m, random, random_site, random_pos1, random_pos2, flip)
+        !$OMP t, m, random, random_site, random_pos1, random_pos2, flip, now)
         do s=1, n_solutions
                 best_solutions(s,1,:,:) = solutions(s,:,:)
                 best_energies(s,1) = energy(num_species, max_site_num, species_nums, &
@@ -669,10 +678,12 @@ subroutine monte_carlo(species_nums, species_occs, shared_sites, solutions, cons
                                                     new_solution, const_e, a_e, b_e)
                                 !Save solution if it is in n best soultions found
                                 if(new_energy .lt. MAXVAL(best_energies(s,:),1)) then
+                                if(MINVAL(ABS(best_energies(s,:)-new_energy),1) .gt. tol) then
                                         best_solutions(s,MAXLOC(best_energies(s,:),1),:,:) &
                                                      = new_solution
                                         best_energies(s,MAXLOC(best_energies(s,:),1)) &
                                                      = new_energy
+                                end if
                                 end if
                                 !Decide if flip is accepted
                                 flip = .FALSE.
@@ -691,15 +702,16 @@ subroutine monte_carlo(species_nums, species_occs, shared_sites, solutions, cons
                         end if
                         if(MODULO(t, write_steps) .eq. 0) then
                                 call cpu_time(now)
-                                write(*,*) "Solution:", s, "Step:", t, "kT:", current_kT, "Current-Energy:", &
+                                write(*,*) "Thread:", s, "Step:", t, "kT:", current_kT, "Current-Energy:", &
                                            current_energy, "Lowest-Energy:", MINVAL(best_energies(s,:),1), &
                                            "CPU-TIME:", (now-start)
+                                write(*,*) "CPU-TIME:", (now-start), "GLOBAL-MINIMUM:", MINVAL(best_energies)
                         end if
                         !Perform simulated annealing if sim_an < 1
                         if(MODULO(t, sim_an_steps) .eq. 0) then
                                 current_kT = current_kT*sim_an
                         end if
-                        if(MINVAL(best_energies) .eq. prev_min_energy) then
+                        if(ABS(MINVAL(best_energies)-prev_min_energy) .lt. tol) then
                                 steps_no_improve = steps_no_improve+1
                         else
                                 steps_no_improve = 0
@@ -713,7 +725,7 @@ subroutine monte_carlo(species_nums, species_occs, shared_sites, solutions, cons
 end subroutine monte_carlo
 
 !Generation Exchange Genetic Algorithm
-subroutine rega(species_nums, species_occs, shared_sites, const_e, a_e, b_e, n, num_ga, ga_steps, &
+subroutine rega(species_nums, species_occs, shared_sites, const_e, a_e, b_e, n, tol, num_ga, ga_steps, &
                 generation_size, pool_size, elite_size, mutation_rate, stop_time, stop_no_improve_steps, &
                 write_steps, max_site_num, num_species, best_energies, best_solutions)
         !$ use omp_lib
@@ -726,7 +738,7 @@ subroutine rega(species_nums, species_occs, shared_sites, const_e, a_e, b_e, n, 
         !f2py write_steps = 100000
         integer, intent(in):: species_nums(num_species), species_occs(num_species)
         logical, intent(in):: shared_sites(num_species, num_species)
-        real(kind=prec), intent(in):: const_e
+        real(kind=prec), intent(in):: const_e, tol
         real(kind=prec), intent(in):: a_e(num_species, max_site_num), &
                                       b_e(num_species, max_site_num, num_species, max_site_num)
         real(kind=prec), intent(out):: best_energies(n)
@@ -777,7 +789,7 @@ subroutine rega(species_nums, species_occs, shared_sites, const_e, a_e, b_e, n, 
                 !$OMP PARALLEL DO DEFAULT(SHARED)
                 do i=1, n
                         call ga(species_nums, species_occs, shared_sites, generation(i,:,:,:), const_e, a_e, b_e, &
-                                generation_size, ga_steps, generation_size, pool_size, elite_size, mutation_rate, &
+                                generation_size, tol, ga_steps, generation_size, pool_size, elite_size, mutation_rate, &
                                 stop_time, -1, ga_steps+1, max_site_num, num_species, generation_size, &
                                 generation_energies(i,:), generation(i,:,:,:))
                  end do
@@ -791,7 +803,7 @@ subroutine rega(species_nums, species_occs, shared_sites, const_e, a_e, b_e, n, 
                         end do
                         do j=1, generation_size
                                 if(generation_energies(i,j) .lt. MAXVAL(best_energies,1)) then
-                                        if(MINVAL(ABS(best_energies-generation_energies(i,j)),1) .gt. 10d-7) then
+                                        if(MINVAL(ABS(best_energies-generation_energies(i,j)),1) .gt. tol) then
                                                 best_solutions(MAXLOC(best_energies, 1),:,:) = generation(i,j,:,:)
                                                 best_energies(MAXLOC(best_energies, 1)) = generation_energies(i,j)
                                         end if
@@ -803,7 +815,7 @@ subroutine rega(species_nums, species_occs, shared_sites, const_e, a_e, b_e, n, 
                         call cpu_time(now)
                         write(*,*) "STEP:", t, "GLOBAL MINIMUM:", MINVAL(best_energies), "CPU-TIME:", (now-start)
                 end if
-                if(MINVAL(best_energies) .eq. prev_min_energy) then
+                if(ABS(MINVAL(best_energies)-prev_min_energy) .lt. tol) then
                         steps_no_improve = steps_no_improve+1
                 else
                         steps_no_improve = 0
@@ -816,7 +828,7 @@ end subroutine rega
 
 
 !Genetic Algorithm run subroutine
-subroutine ga(species_nums, species_occs, shared_sites, solutions, const_e, a_e, b_e, n, ga_steps, &
+subroutine ga(species_nums, species_occs, shared_sites, solutions, const_e, a_e, b_e, n, tol, ga_steps, &
               generation_size, pool_size, elite_size, mutation_rate, stop_time, stop_no_improve_steps, & 
               write_steps, max_site_num, num_species, n_solutions, best_energies, best_solutions)
         !$ use omp_lib
@@ -830,7 +842,7 @@ subroutine ga(species_nums, species_occs, shared_sites, solutions, const_e, a_e,
         integer, intent(in):: species_nums(num_species), species_occs(num_species)
         logical, intent(in):: shared_sites(num_species, num_species), &
                               solutions(n_solutions, num_species, max_site_num)
-        real(kind=prec), intent(in):: const_e
+        real(kind=prec), intent(in):: const_e, tol
         real(kind=prec), intent(in):: a_e(num_species, max_site_num), &
                                       b_e(num_species, max_site_num, num_species, max_site_num)
         real(kind=prec), intent(out):: best_energies(n)
@@ -894,7 +906,7 @@ subroutine ga(species_nums, species_occs, shared_sites, solutions, const_e, a_e,
                 do i=1, generation_size
                         cum_sum(i) = SUM(generation_energies(1:i))/current_energy
                         if(generation_energies(i) .lt. MAXVAL(best_energies, 1)) then
-                                if(MINVAL(ABS(best_energies-generation_energies(i)),1) .gt. 10d-7) then
+                                if(MINVAL(ABS(best_energies-generation_energies(i)),1) .gt. tol) then
                                         best_solutions(MAXLOC(best_energies, 1),:,:) = generation(i,:,:)
                                         best_energies(MAXLOC(best_energies, 1)) = generation_energies(i)
                                 end if
@@ -1125,7 +1137,7 @@ subroutine ga(species_nums, species_occs, shared_sites, solutions, const_e, a_e,
                                    "Min:", MINVAL(generation_energies(:),1), "Max:", MAXVAL(generation_energies(:),1), &
                                    "CPU-TIME:", (now-start)
                 end if
-                if(MINVAL(best_energies) .eq. prev_min_energy) then
+                if(ABS(MINVAL(best_energies)-prev_min_energy) .lt. tol) then
                         steps_no_improve = steps_no_improve+1
                 else
                         steps_no_improve = 0

@@ -1,0 +1,5 @@
+tests
+GOAC/Ewald
+GOAC/__pycache__
+GOAC/*.so
+GOAC/test.py

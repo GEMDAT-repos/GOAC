@@ -18,7 +18,6 @@ def input_parser():
     global charges
     global fixed_sites
     global dry_run
-    global cores
     global solver_name
     global solver_options
     global n_best_solutions
@@ -37,7 +36,6 @@ def input_parser():
     p.add_option('--dry', '-d', help="Set to perform dry run.", dest="dry", default=False, action='store_true')
     p.add_option('--solver_options', '-y', help="File with parameters for the set solver.",
                  dest="solver_options", default=None, type="string")
-    p.add_option('--cores', '-c', help="Number of threads the code will use", dest="cores", default=1, type="int")
     p.add_option('--solver', '-s', help="Name of solver to solve given Coulomb problem", dest="solver",
                  default="", type="string")
     p.add_option('--number', '-n', help="The 'n' best soultions are returned", dest="n",
@@ -57,7 +55,6 @@ def input_parser():
     options, arguments = p.parse_args()
     cif_file = options.cif_file
     dry_run = options.dry
-    cores = options.cores
     solver_name = options.solver.casefold()
     solver_options = options.solver_options
     n_best_solutions = options.n
@@ -115,51 +112,53 @@ def main():
     if dry_run:
         return
 
+    if write_part_struct:
+        problem.write_partial_cifs()
+
     if read_energy:
         problem.read_energy()
     else:
-        problem.calc_coulomb_matrices(cores=cores, write_part_struct=write_part_struct)
+        problem.calc_coulomb_matrices()
+
     if write_energy:
         problem.write_energy()
 
+    if problem.total_combinations == 0:
+        out = "Filename.cif \t\t E / eV\n"
+        out += cif_file + " \t\t " + str(round(problem.const, 5)) + "\n"
+        f = open(out_name + "-summary.txt", "w")
+        f.write(out)
+        f.close()
+        print("Nothing to do here. The provided cif file has no iterative sites.")
+        return
 
     match solver_name:
         case "gurobi":
-            solver = Gurobi_Solver(name="Gurobi", problem=problem, cores=cores, n=n_best_solutions, w=write)
+            solver = Gurobi_Solver(name="Gurobi", problem=problem, n=n_best_solutions, w=write)
         case "gurobi-heuristic":
-            solver = Gurobi_Solver(name="Gurobi-Heuristic", problem=problem, cores=cores, n=n_best_solutions, w=write)
+            solver = Gurobi_Solver(name="Gurobi-Heuristic", problem=problem, n=n_best_solutions, w=write)
         case "greedy":
-            solver = Greedy_Solver(name="Greedy", problem=problem, cores=cores, n=n_best_solutions, w=write)
-        case "greedy-bb":
-            solver = Greedy_Solver(name="Greedy-BB", problem=problem, cores=cores, n=n_best_solutions, w=write)
-        case "greedy-lm":
-            solver = Greedy_Solver(name="Greedy-LM", problem=problem, cores=cores, n=n_best_solutions, w=write)
-        case "greedy-mc":
-            solver = Greedy_Solver(name="Greedy-MC", problem=problem, cores=cores, n=n_best_solutions, w=write)
-        case "greedy-sa":
-            solver = Greedy_Solver(name="Greedy-SA", problem=problem, cores=cores, n=n_best_solutions, w=write)
-        case "greedy-remc":
-            solver = Greedy_Solver(name="Greedy-REMC", problem=problem, cores=cores, n=n_best_solutions, w=write)
+            solver = Greedy_Solver(name="Greedy", problem=problem, n=n_best_solutions, w=write)
         case "random":
-            solver = Random_Solver(name="Random", problem=problem, cores=cores, n=n_best_solutions, w=write)
+            solver = Random_Solver(name="Random", problem=problem, n=n_best_solutions, w=write)
         case "random-bb":
-            solver = Random_Solver(name="Random-BB", problem=problem, cores=cores, n=n_best_solutions, w=write)
+            solver = Random_Solver(name="Random-BB", problem=problem, n=n_best_solutions, w=write)
         case "random-lm":
-            solver = Random_Solver(name="Random-LM", problem=problem, cores=cores, n=n_best_solutions, w=write)
+            solver = Random_Solver(name="Random-LM", problem=problem, n=n_best_solutions, w=write)
         case "random-mc":
-            solver = Random_Solver(name="Random-MC", problem=problem, cores=cores, n=n_best_solutions, w=write)
+            solver = Random_Solver(name="Random-MC", problem=problem, n=n_best_solutions, w=write)
         case "random-sa":
-            solver = Random_Solver(name="Random-SA", problem=problem, cores=cores, n=n_best_solutions, w=write)
+            solver = Random_Solver(name="Random-SA", problem=problem, n=n_best_solutions, w=write)
         case "random-remc":
-            solver = Random_Solver(name="Random-REMC", problem=problem, cores=cores, n=n_best_solutions, w=write)
+            solver = Random_Solver(name="Random-REMC", problem=problem, n=n_best_solutions, w=write)
         case "random-ga":
-            solver = Random_Solver(name="Random-GA", problem=problem, cores=cores, n=n_best_solutions, w=write)
+            solver = Random_Solver(name="Random-GA", problem=problem, n=n_best_solutions, w=write)
         case "random-rega":
-            solver = Random_Solver(name="Random-REGA", problem=problem, cores=cores, n=n_best_solutions, w=write)
+            solver = Random_Solver(name="Random-REGA", problem=problem, n=n_best_solutions, w=write)
         case "random-hybrid":
-            solver = Random_Solver(name="Random-Hybrid", problem=problem, cores=cores, n=n_best_solutions, w=write)
+            solver = Random_Solver(name="Random-Hybrid", problem=problem, n=n_best_solutions, w=write)
         case _:
-            raise "The given solver name is unknown. Chose from: [...]" # TODO fill solver
+            raise ("The given solver name is unknown. Chose from: Gurobi, Gurobi-Heuristic, Greedy, Random, Random-BB, Random-LM, Random-MC, Random-SA, Random-REMC, Random-GA, Random-REGA, Random-Hybrid")
 
 
     solver.initialize(options=solver_options)

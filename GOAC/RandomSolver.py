@@ -20,8 +20,8 @@ from IterationProblem import Iteration_Problem
 import time
 
 class Random_Solver(Solver):
-    def __init__(self, name:str, problem:Iteration_Problem, cores:int, n=1, w=False):
-        super().__init__(name=name, problem=problem, cores=cores, n=n, w=w)
+    def __init__(self, name:str, problem:Iteration_Problem, n=1, w=False):
+        super().__init__(name=name, problem=problem, n=n, w=w)
 
     def initialize(self, options:str=None):
         self.opt = {}
@@ -87,6 +87,8 @@ class Random_Solver(Solver):
                 self.opt["mutation_rate"] = 0.03
                 self.opt["ga_write_steps"] = 1
                 self.opt["hybrid_repeat"] = 10
+        if "tol" not in self.opt.keys():
+            self.opt["tol"] = 1e-08
 
 
         self.species_nums = []
@@ -129,16 +131,16 @@ class Random_Solver(Solver):
         if self.name == "Random-BB":
             lowest_energies, lowest_solutions = branch_n_bound(self.species_nums, self.species_occs, self.shared_sites,
                                                                best_solutions, self.problem.const, self.np_alpha,
-                                                               self.problem.beta, self.opt["samples"])
+                                                               self.problem.beta, self.opt["samples"], self.opt["tol"])
         elif self.name == "Random-LM":
             lowest_energies, lowest_solutions = local_minimizer(self.species_nums, self.species_occs, self.shared_sites,
                                                                 best_solutions, self.problem.const, self.np_alpha,
-                                                                self.problem.beta, self.opt["samples"],
+                                                                self.problem.beta, self.opt["samples"], self.opt["tol"],
                                                                 self.opt["stop_time"], self.opt["stop_steps_no_improve"])
         elif self.name == "Random-MC" or self.name == "Random-SA":
             lowest_energies, lowest_solutions, cs = monte_carlo(self.species_nums, self.species_occs, self.shared_sites,
                                                                 best_solutions, self.problem.const, self.np_alpha,
-                                                                self.problem.beta, self.opt["samples"],
+                                                                self.problem.beta, self.opt["samples"], self.opt["tol"],
                                                                 self.opt["mc_steps"], self.opt["mc_kt"],
                                                                 self.opt["mc_sim_an"], self.opt["mc_sim_an_steps"],
                                                                 self.opt["mc_write_steps"], self.opt["stop_time"],
@@ -146,14 +148,14 @@ class Random_Solver(Solver):
         elif self.name == "Random-REMC":
             lowest_energies, lowest_solutions = remc(self.species_nums, self.species_occs, self.shared_sites,
                                                      best_solutions, self.problem.const, self.np_alpha,
-                                                     self.problem.beta, self.opt["samples"],
+                                                     self.problem.beta, self.opt["samples"], self.opt["tol"],
                                                      self.opt["mc_steps"], self.opt["re_repeat"],
                                                      self.opt["mc_kt"], self.opt["stop_time"],
                                                      self.opt["stop_steps_no_improve"])
         elif self.name == "Random-GA":
             best_energies, best_solutions = ga(self.species_nums, self.species_occs, self.shared_sites,
                                                best_solutions, self.problem.const, self.np_alpha,
-                                               self.problem.beta, self.n,
+                                               self.problem.beta, self.n, self.opt["tol"],
                                                self.opt["ga_steps"], self.opt["generation_size"],
                                                self.opt["pool_size"], self.opt["elite_size"],
                                                self.opt["mutation_rate"], self.opt["stop_time"],
@@ -161,7 +163,7 @@ class Random_Solver(Solver):
         elif self.name == "Random-REGA":
             best_energies, best_solutions = rega(self.species_nums, self.species_occs, self.shared_sites,
                                                  self.problem.const, self.np_alpha,
-                                                 self.problem.beta, self.n, self.opt["num_ga"],
+                                                 self.problem.beta, self.n, self.opt["tol"], self.opt["num_ga"],
                                                  self.opt["ga_steps"], self.opt["generation_size"],
                                                  self.opt["pool_size"], self.opt["elite_size"],
                                                  self.opt["mutation_rate"], self.opt["stop_time"],
@@ -172,32 +174,37 @@ class Random_Solver(Solver):
             for t in range(self.opt["hybrid_repeat"]):
                 lowest_energies, lowest_solutions = remc(self.species_nums, self.species_occs, self.shared_sites,
                                                      best_solutions[0:n_md], self.problem.const, self.np_alpha,
-                                                     self.problem.beta, 1,
+                                                     self.problem.beta, 1, self.opt["tol"],
                                                      self.opt["mc_steps"], self.opt["re_repeat"],
                                                      self.opt["mc_kt"], self.opt["stop_time"],
                                                      self.opt["stop_steps_no_improve"])
                 best_energies, best_solutions = ga(self.species_nums, self.species_occs, self.shared_sites,
                                                lowest_solutions[:,0], self.problem.const, self.np_alpha,
-                                               self.problem.beta, self.n,
+                                               self.problem.beta, self.n, self.opt["tol"],
                                                self.opt["ga_steps"], self.opt["generation_size"],
                                                self.opt["pool_size"], self.opt["elite_size"],
                                                self.opt["mutation_rate"], self.opt["stop_time"],
                                                self.opt["stop_steps_no_improve"], self.opt["ga_write_steps"])
 
         if self.name in ["Random-BB", "Random-LM", "Random-MC", "Random-SA", "Random-REMC"]:
+            out_energies = np.zeros(max(self.n, self.write))
+            out_energies += np.inf
+            shape = list(best_solutions.shape)
+            shape[0] = max(self.n, self.write)
+            out_solutions = np.zeros(tuple(shape))
             if self.opt["samples"] > 1:
-                out_energies = np.zeros(max(self.n, self.write))
-                shape = list(best_solutions.shape)
-                shape[0] = max(self.n, self.write)
-                out_solutions = np.zeros(tuple(shape))
                 for j in range(self.opt["samples"]):
                     for i in range(self.n):
                         if lowest_energies[i, j] < np.max(out_energies):
-                            out_solutions[np.argmax(out_energies)] = lowest_solutions[i, j]
-                            out_energies[np.argmax(out_energies)] = lowest_energies[i, j]
+                            if np.min(np.abs(out_energies-lowest_energies[i, j])) > self.opt["tol"]:
+                                out_solutions[np.argmax(out_energies)] = lowest_solutions[i, j]
+                                out_energies[np.argmax(out_energies)] = lowest_energies[i, j]
             else:
-                out_energies = lowest_energies[:,0]
-                out_solutions = lowest_solutions[:,0]
+                for i in range(self.n):
+                    if lowest_energies[i, 0] < np.max(out_energies):
+                        if np.min(np.abs(out_energies - lowest_energies[i, 0])) > self.opt["tol"]:
+                            out_solutions[np.argmax(out_energies)] = lowest_solutions[i, 0]
+                            out_energies[np.argmax(out_energies)] = lowest_energies[i,0]
         else:
             out_energies = best_energies
             out_solutions = best_solutions
