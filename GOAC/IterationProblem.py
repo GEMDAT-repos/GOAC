@@ -344,8 +344,10 @@ class Iteration_Problem():
 
         #write constant ions in cif file
         if len(struct.sites) > 1:
-            cifWriter = CifWriter(struct)
-            cifWriter.write_file("const.cif")
+            with warnings.catch_warnings(record=True) as recorded_warnings:
+                warnings.simplefilter("ignore")
+                cifWriter = CifWriter(struct)
+                cifWriter.write_file("const.cif")
         fixed_struct = copy.deepcopy(struct)
 
         i = -1
@@ -360,14 +362,18 @@ class Iteration_Problem():
                     # create new structure with only one site
                     new_struct = Structure(lattice=struct.lattice, species=[{el: 1.0, }, ], labels=[label, ],
                                            coords=[it_site.coords[i], ], coords_are_cartesian=True)
-                    cifWriter = CifWriter(new_struct)
-                    cifWriter.write_file("self-" + str(i) + "-" + str(j) + ".cif")
+                    with warnings.catch_warnings(record=True) as recorded_warnings:
+                        warnings.simplefilter("ignore")
+                        cifWriter = CifWriter(new_struct)
+                        cifWriter.write_file("self-" + str(i) + "-" + str(j) + ".cif")
 
                     # create structure with site and all fixed sites
                     a_struct = copy.deepcopy(fixed_struct)
                     a_struct.append(species={el: 1.0, }, coords=it_site.coords[i], coords_are_cartesian=True)
-                    cifWriter = CifWriter(a_struct)
-                    cifWriter.write_file("alpha-" + str(i) + "-" + str(j) + ".cif")
+                    with warnings.catch_warnings(record=True) as recorded_warnings:
+                        warnings.simplefilter("ignore")
+                        cifWriter = CifWriter(a_struct)
+                        cifWriter.write_file("alpha-" + str(i) + "-" + str(j) + ".cif")
 
                     k=-1
                     # iterate over all sites and elemts per site
@@ -385,9 +391,11 @@ class Iteration_Problem():
                                                            labels=[label, label2],
                                                            coords=[it_site.coords[j], it_site2.coords[l]],
                                                            coords_are_cartesian=True)
-                                    cifWriter = CifWriter(new_struct)
-                                    cifWriter.write_file("beta-" + str(i) + "-" + str(j) + "-" +
-                                                         str(k) + "-" + str(l) + ".cif")
+                                    with warnings.catch_warnings(record=True) as recorded_warnings:
+                                        warnings.simplefilter("ignore")
+                                        cifWriter = CifWriter(new_struct)
+                                        cifWriter.write_file("beta-" + str(i) + "-" + str(j) + "-" +
+                                                             str(k) + "-" + str(l) + ".cif")
 
     def __str__(self):
         return self.out
@@ -406,6 +414,7 @@ class Iteration_Problem():
         #Iterate over all iterative sites and ions and positions
         i = -1
         var_counter = -1
+        added_species = False
         for it_site in self.iterate_sites.values():
             for el in it_site.site.species.as_dict().keys():
                 i += 1
@@ -413,11 +422,15 @@ class Iteration_Problem():
                     var_counter += 1
                     #check if site is occupied in solution, var_counter needed as Grurobi output id 1D
                     if np.abs(x[var_counter]-1) < 10E-6:
+                        added_species = True
                         struct.append(species={el: 1.0,}, coords=it_site.coords[j], coords_are_cartesian=True)
 
         #Write structure as cif
-        cifWriter = CifWriter(struct)
-        cifWriter.write_file(name)
+        if added_species:
+            with warnings.catch_warnings(record=True) as recorded_warnings:
+                warnings.simplefilter("ignore")
+                cifWriter = CifWriter(struct)
+                cifWriter.write_file(name)
 
 
     def print_solution_cif_fotran(self, name: str, x):
@@ -431,6 +444,7 @@ class Iteration_Problem():
                 delete_sites.append(i)
         struct.remove_sites(delete_sites)
 
+        added_species = False
         # Iterate over all iterative sites and ions and positions
         i = -1
         for it_site in self.iterate_sites.values():
@@ -439,7 +453,11 @@ class Iteration_Problem():
                 for j in range(it_site.num):
                     if x[i,j]:
                         struct.append(species={el: 1.0, }, coords=it_site.coords[j], coords_are_cartesian=True)
-
+                        added_species = True
         # Write structure as cif
-        cifWriter = CifWriter(struct)
-        cifWriter.write_file(name)
+        if added_species:
+            with warnings.catch_warnings(record=True) as recorded_warnings:
+                warnings.simplefilter("ignore")
+                cifWriter = CifWriter(struct)
+                cifWriter.write_file(name)
+        return added_species

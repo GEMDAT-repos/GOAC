@@ -124,7 +124,10 @@ class Gurobi_Solver(Solver):
             x = self.model.Xn
             name = out_name + "-" + str(sol) + ".cif"
             if sol < self.write:
-                self.problem.print_solution_cif_gurobi(name=name, x=x)
+                if not self.problem.print_solution_cif_gurobi(name=name, x=x):
+                    name = "NaN"
+            else:
+                name = "NaN"
             out += name + " \t\t " + str(round(self.model.PoolObjVal, 5)) + "\n"
 
         #Write summary tx with cif-file names and energies

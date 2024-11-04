@@ -90,9 +90,12 @@ class Greedy_Solver(Solver):
 
         for sol in range(len(out_energies)):
             name = out_name + "-" + str(sol) + ".cif"
-            out += name + " \t\t " + str(round(out_energies[sol], 5)) + "\n"
             if sol < self.write:
-                self.problem.print_solution_cif_fotran(name=name, x=out_solutions[sol])
+                if not self.problem.print_solution_cif_fotran(name=name, x=out_solutions[sol]):
+                    name = "NaN"
+            else:
+                name = "NaN"
+            out += name + " \t\t " + str(round(out_energies[sol], 5)) + "\n"
 
         # Write summary tx with cif-file names and energies
         f = open(out_name + "-summary.txt", "w")
