@@ -52,12 +52,15 @@ subroutine greedy(species_nums, species_occs, shared_sites, const_e, a_e, b_e, n
                                                         current_energy = energy(num_species, max_site_num, species_nums, &
                                                                                 current_solution, const_e, a_e, b_e)
                                                         if(current_energy .lt. MAXVAL(best_energies(l,:),1)) then
-                                                        if(MINVAL(ABS(best_energies(l,:)-current_energy),1) .gt. tol) then
+                                                                if(tol .gt. 0.d0 .and. & 
+                                                                   MINVAL(ABS(best_energies(l,:)-current_energy),1) &
+                                                                   .lt. tol) then
+                                                                        cycle
+                                                                end if
                                                                 best_solutions(l,MAXLOC(best_energies(l,:),1),:,:) &
                                                                               = current_solution
                                                                 best_energies(l,MAXLOC(best_energies(l,:),1)) &
                                                                               = current_energy
-                                                        end if
                                                         end if
                                                 end if
                                         end do
@@ -70,13 +73,16 @@ subroutine greedy(species_nums, species_occs, shared_sites, const_e, a_e, b_e, n
                 do i=1, n
                         do j=1, n
                                 if(best_energies(i,j) .lt. MAXVAL(energies,1)) then
-                                if(MINVAL(ABS(energies-best_energies(i,j)),1) .gt. tol) then
+                                        if(tol .gt. 0.d0 .and. &
+                                           MINVAL(ABS(energies-best_energies(i,j)),1) &
+                                           .lt. tol) then
+                                                        cycle
+                                        end if
                                         if(solution_unique(num_species, max_site_num, n, species_nums, &
                                                            best_solutions(i,j,:,:), solutions)) then
                                                 solutions(MAXLOC(energies,1),:,:) = best_solutions(i,j,:,:)
                                                 energies(MAXLOC(energies,1)) = best_energies(i,j)
                                         end if
-                                end if
                                 end if
                         end do
                 end do
@@ -216,7 +222,11 @@ subroutine local_minimizer(species_nums, species_occs, shared_sites, solutions, 
                         do j=1, n
                                 do k=1, n
                                         if(opt_energies(j,k) .lt. MAXVAL(lowest_energies(i,:),1)) then
-                                        if(MINVAL(ABS(lowest_energies(i,:)-opt_energies(j,k)),1) .gt. tol) then
+                                                if(tol .gt. 0.d0 .and. &
+                                                   MINVAL(ABS(lowest_energies(i,:)-opt_energies(j,k)),1) &
+                                                   .lt. tol) then
+                                                        cycle
+                                                end if
                                                 if(solution_unique(num_species, max_site_num, n, species_nums, &
                                                                    opt_solutions(j,k,:,:), lowest_solutions(i,:,:,:))) then
                                                         lowest_solutions(i,MAXLOC(lowest_energies(i,:),1),:,:) = & 
@@ -225,14 +235,14 @@ subroutine local_minimizer(species_nums, species_occs, shared_sites, solutions, 
                                                         energy_changed = .TRUE.
                                                 end if
                                         end if
-                                        end if
                                 end do
                         end do
                 end do
                 if(kill .ge. 10d7) then
                         write(*,*) "WARNING: Subroutine killed because of too many while iteations"
                 end if
-                if(ABS(MINVAL(lowest_energies)-prev_min_energy) .lt. tol) then
+                if((tol .gt. 0.d0 .and. ABS(MINVAL(lowest_energies)-prev_min_energy) .lt. tol) .or. & 
+                   (tol .lt. 0.d0 .and. MINVAL(lowest_energies) .ge. prev_min_energy)) then
                         steps_no_improve = steps_no_improve+1
                 else
                         steps_no_improve = 0
@@ -298,12 +308,15 @@ subroutine branch_n_bound(species_nums, species_occs, shared_sites, solutions, c
                                                 current_energy = energy(num_species, max_site_num, species_nums, &
                                                                         current_solution, const_e, a_e, b_e)
                                                 if(current_energy .lt. MAXVAL(opt_energies(l,:),1)) then
-                                                if(MINVAL(ABS(opt_energies(l,:)-current_energy),1) .gt. tol) then
+                                                        if(tol .gt. 0.d0 .and. &
+                                                           MINVAL(ABS(opt_energies(l,:)-current_energy),1) &
+                                                           .lt. tol) then
+                                                                cycle
+                                                        end if
                                                         opt_solutions(l,MAXLOC(opt_energies(l,:),1),:,:) &
                                                                 = current_solution
                                                         opt_energies(l,MAXLOC(opt_energies(l,:),1)) &
                                                                 = current_energy
-                                                end if
                                                 end if
                                         end if
                                 end do
@@ -507,12 +520,15 @@ subroutine remc(species_nums, species_occs, shared_sites, solutions, const_e, a_
                                 do i=1, n
                                         current_energy = best_energies(s,i)
                                         if(current_energy .lt. MAXVAL(final_energies_tmp(k,s,:),1)) then
-                                        if(MINVAL(ABS(final_energies_tmp(k,s,:)-current_energy),1) .gt. tol) then
+                                                if(tol .gt. 0.d0 .and. &
+                                                   MINVAL(ABS(final_energies_tmp(k,s,:)-current_energy),1) &
+                                                   .lt. tol) then
+                                                        cycle
+                                                end if
                                                 final_solutions_tmp(k,s,MAXLOC(final_energies_tmp(k,s,:),1),:,:) &
                                                               = best_solutions(s,i,:,:)
                                                 final_energies_tmp(k,s,MAXLOC(final_energies_tmp(k,s,:),1)) &
                                                               = current_energy
-                                        end if
                                         end if
                                 end do
                                 call cpu_time(now)
@@ -534,12 +550,15 @@ subroutine remc(species_nums, species_occs, shared_sites, solutions, const_e, a_
                                 do i=1, n
                                         current_energy = final_energies_tmp(k,s,i)
                                         if(current_energy .lt. MAXVAL(final_energies(s,:),1)) then
-                                        if(MINVAL(ABS(final_energies(s,:)-current_energy),1) .gt. tol) then
+                                                if(tol .gt. 0.d0 .and. &
+                                                   MINVAL(ABS(final_energies(s,:)-current_energy),1) &
+                                                   .lt. tol) then
+                                                        cycle
+                                                end if
                                                 final_solutions(s,MAXLOC(final_energies(s,:),1),:,:) &
                                                               = final_solutions_tmp(k,s,i,:,:)
                                                 final_energies(s,MAXLOC(final_energies(s,:),1)) &
                                                               = current_energy
-                                        end if
                                         end if
                                 end do
                                 current_energy = energy(num_species, max_site_num, species_nums, &
@@ -565,7 +584,8 @@ subroutine remc(species_nums, species_occs, shared_sites, solutions, const_e, a_
                         end do
                 end do
                 !$OMP END PARALLEL DO
-                if(ABS(MINVAL(final_energies)-prev_min_energy) .lt. tol) then
+                if((tol .gt. 0.d0 .and. ABS(MINVAL(final_energies)-prev_min_energy) .lt. tol) .or. &
+                   (tol .lt. 0.d0 .and. MINVAL(final_energies) .ge. prev_min_energy)) then
                         steps_no_improve = steps_no_improve+1
                 else
                         steps_no_improve = 0
@@ -678,7 +698,9 @@ subroutine monte_carlo(species_nums, species_occs, shared_sites, solutions, cons
                                                     new_solution, const_e, a_e, b_e)
                                 !Save solution if it is in n best soultions found
                                 if(new_energy .lt. MAXVAL(best_energies(s,:),1)) then
-                                if(MINVAL(ABS(best_energies(s,:)-new_energy),1) .gt. tol) then
+                                if(.not.(tol .gt. 0.d0 .and. &
+                                   MINVAL(ABS(best_energies(s,:)-new_energy),1) &
+                                   .lt. tol)) then
                                         best_solutions(s,MAXLOC(best_energies(s,:),1),:,:) &
                                                      = new_solution
                                         best_energies(s,MAXLOC(best_energies(s,:),1)) &
@@ -711,7 +733,8 @@ subroutine monte_carlo(species_nums, species_occs, shared_sites, solutions, cons
                         if(MODULO(t, sim_an_steps) .eq. 0) then
                                 current_kT = current_kT*sim_an
                         end if
-                        if(ABS(MINVAL(best_energies)-prev_min_energy) .lt. tol) then
+                        if((tol .gt. 0.d0 .and. ABS(MINVAL(best_energies)-prev_min_energy) .lt. tol) .or. & 
+                           (tol .lt. 0.d0 .and. MINVAL(best_energies) .ge. prev_min_energy)) then
                                 steps_no_improve = steps_no_improve+1
                         else
                                 steps_no_improve = 0
@@ -803,10 +826,13 @@ subroutine rega(species_nums, species_occs, shared_sites, const_e, a_e, b_e, n, 
                         end do
                         do j=1, generation_size
                                 if(generation_energies(i,j) .lt. MAXVAL(best_energies,1)) then
-                                        if(MINVAL(ABS(best_energies-generation_energies(i,j)),1) .gt. tol) then
-                                                best_solutions(MAXLOC(best_energies, 1),:,:) = generation(i,j,:,:)
-                                                best_energies(MAXLOC(best_energies, 1)) = generation_energies(i,j)
+                                        if(tol .gt. 0.d0 .and. &
+                                           MINVAL(ABS(best_energies-generation_energies(i,j)),1) &
+                                           .lt. tol) then
+                                                cycle
                                         end if
+                                        best_solutions(MAXLOC(best_energies, 1),:,:) = generation(i,j,:,:)
+                                        best_energies(MAXLOC(best_energies, 1)) = generation_energies(i,j)
                                 end if
                         end do
                  end do
@@ -815,7 +841,8 @@ subroutine rega(species_nums, species_occs, shared_sites, const_e, a_e, b_e, n, 
                         call cpu_time(now)
                         write(*,*) "STEP:", t, "GLOBAL MINIMUM:", MINVAL(best_energies), "CPU-TIME:", (now-start)
                 end if
-                if(ABS(MINVAL(best_energies)-prev_min_energy) .lt. tol) then
+                if((tol .gt. 0.d0 .and. ABS(MINVAL(best_energies)-prev_min_energy) .lt. tol) .or. & 
+                   (tol .lt. 0.d0 .and. MINVAL(best_energies) .ge. prev_min_energy)) then
                         steps_no_improve = steps_no_improve+1
                 else
                         steps_no_improve = 0
@@ -906,10 +933,13 @@ subroutine ga(species_nums, species_occs, shared_sites, solutions, const_e, a_e,
                 do i=1, generation_size
                         cum_sum(i) = SUM(generation_energies(1:i))/current_energy
                         if(generation_energies(i) .lt. MAXVAL(best_energies, 1)) then
-                                if(MINVAL(ABS(best_energies-generation_energies(i)),1) .gt. tol) then
-                                        best_solutions(MAXLOC(best_energies, 1),:,:) = generation(i,:,:)
-                                        best_energies(MAXLOC(best_energies, 1)) = generation_energies(i)
+                                if(tol .gt. 0.d0 .and. &
+                                   MINVAL(ABS(best_energies-generation_energies(i)),1) &
+                                   .lt. tol) then
+                                        cycle
                                 end if
+                                best_solutions(MAXLOC(best_energies, 1),:,:) = generation(i,:,:)
+                                best_energies(MAXLOC(best_energies, 1)) = generation_energies(i)
                         end if
                 end do
                 if(t .gt. ga_steps) then
@@ -1137,7 +1167,8 @@ subroutine ga(species_nums, species_occs, shared_sites, solutions, const_e, a_e,
                                    "Min:", MINVAL(generation_energies(:),1), "Max:", MAXVAL(generation_energies(:),1), &
                                    "CPU-TIME:", (now-start)
                 end if
-                if(ABS(MINVAL(best_energies)-prev_min_energy) .lt. tol) then
+                if((tol .gt. 0.d0 .and. ABS(MINVAL(best_energies)-prev_min_energy) .lt. tol) .or. & 
+                   (tol .lt. 0.d0 .and. MINVAL(best_energies) .ge. prev_min_energy)) then
                         steps_no_improve = steps_no_improve+1
                 else
                         steps_no_improve = 0
