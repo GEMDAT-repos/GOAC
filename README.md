@@ -6,26 +6,24 @@ Details on how to use GOAC as command line tool or directly from own Python code
 
 ## Installation
 
-Install a Python3.10, or higher, Python-environment on your system along with a Fortran compiler (e.g., gfortran7.5.0) and a corresponding OpenMP library.
+Install a Python3 environment on your system along with a Fortran compiler (e.g., gfortran) and a corresponding OpenMP library.
 
 ### Requirements:
 
-Next to standard Python packages such as time, warnings, re, copy, and optparse some more Python package are required before installing GOAC:
+The required external Python packages can be installed for example via pip by:
 ```sh
-pip install numpy
-pip install pymatgen
-pip install gurobipy
+pip install -r requirements.txt
 ```
 
-The functionalities of Gurobi required to run GOAC are freely available by installing the package listed above but corresponding licences should be checked. GOAC can also be used completely without Gurobi by relying on the internal solvers. For using Gurobi for optimization, please follow the offical licensing options, including free academic licenses, under: https://www.gurobi.com/solutions/licensing/
+The requirements contain the licensed package Gurobi and the license should be checked before installation. GOAC can be used completely without Gurobi (do not using the Gurobi solver option) and relying on the internal solvers only. When using Gurobi for optimization (setting Gurobi solver), please follow the offical licensing options, including free academic licenses, under: https://www.gurobi.com/solutions/licensing/
 
 ### Compilation of Fortran Code
 
 If all requirements are satisfied, clone the repository and run the following commands in your copy (in case you want to use another compiler adjust settings accodingly):
 ```sh
 cd GOAC
-python -m numpy.f2py -c --fcompiler=gfortran --f90flags='-fopenmp -Wall' -lgomp GOAC.f90 -m GOAC
-python -m numpy.f2py -c --fcompiler=gfortran --f90flags='-fopenmp -Wall' -lgomp ABCEwald.f90 -m ABCEwald
+FC="gfortran" python3 -m numpy.f2py -c GOAC.f90 -m GOAC --backend meson --dep openmp
+FC="gfortran" python3 -m numpy.f2py -c ABCEwald.f90 -m ABCEwald --backend meson --dep openmp
 cd ..
 ```
 
@@ -33,7 +31,7 @@ cd ..
 
 To test your installation, run the following command:
 ```sh
-python GOAC/ -f LCO.cif -p "Li*=1.0" -p "Co*=3.5" -p "O*=-2.0" -s "random-mc" -n 4 -w 1
+python3 GOAC/ -f LCO.cif -p "Li*=1.0" -p "Co*=3.5" -p "O*=-2.0" -s "random-mc" -n 4 -w 1
 ```
 Depending on your system you should obtain an optimized cif "out-0.cif" and a file "out-summary.txt" within a few seconds. For more advanced usage of the GOAC code please have a look at the Documentation PDF file in this repository.
 
