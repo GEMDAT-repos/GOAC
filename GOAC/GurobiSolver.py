@@ -119,16 +119,21 @@ class Gurobi_Solver(Solver):
 
         #Getting n-best solutions, writing their cif files and a summary txt
         out = "Filename.cif \t\t E / eV\n"
+        is_nan = False
         for sol in range(self.model.SolCount):
             self.model.setParam(GRB.Param.SolutionNumber, sol)
             x = self.model.Xn
             name = out_name + "-" + str(sol) + ".cif"
             if sol < self.write:
                 if not self.problem.print_solution_cif_gurobi(name=name, x=x):
-                    name = "NaN"
+                    is_nan = True
+            if not is_nan:
+                out += name + " \t\t " + str(round(self.model.PoolObjVal, 5)) + "\n"
             else:
-                name = "NaN"
-            out += name + " \t\t " + str(round(self.model.PoolObjVal, 5)) + "\n"
+                out += ("No more solutions to print. "
+                        "To obtain more solutions, increase PoolSolutions in the "
+                        "options file. Consider also that maybe not more solutions exist.")
+                break
 
         #Write summary tx with cif-file names and energies
         f = open(out_name + "-summary.txt", "w")

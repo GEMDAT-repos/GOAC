@@ -13,6 +13,7 @@ from pymatgen.core import Structure
 import warnings
 import re
 import numpy as np
+import math
 import copy
 from pymatgen.io.cif import CifWriter
 import time
@@ -36,6 +37,7 @@ class Iteration_Problem():
         self.cif_file = cif_file
         self.fixed_sites = fixed_sites
         self.charges = charges
+        self.occ_error = False
 
         #Read cif-file with pymatgen
         with warnings.catch_warnings(record=True) as recorded_warnings:
@@ -57,6 +59,11 @@ class Iteration_Problem():
         self.const_sites = []
         q = []
         max_q = 0
+        out = "\n"
+        all_combinations = []
+        oxidation_states = {}
+        composition = {}
+        avg_el_charges = {}
         for i, site in enumerate(self.struct.sites):
             #check if user gave site as fixed
             self.coords.append(site.coords)
@@ -64,6 +71,11 @@ class Iteration_Problem():
             fras = []
             chgs = []
             for el, fra in site.species.get_el_amt_dict().items():
+                if el not in composition.keys():
+                    composition[el] = fra
+                else:
+                    composition[el] += fra
+
                 #Create label for different elements as shared sites have only
                 # label of last element+ number by default
                 fras.append(fra)
@@ -74,7 +86,10 @@ class Iteration_Problem():
                     if "*" in l:
                         l = l.replace("*", "")
                         if l in label:
-                            fixed = True
+                            # Wildcard only for numbers in labels
+                            # Else N* would match every N and Ni
+                            if label.replace(l, "").isdigit():
+                                fixed = True
                     #check for exact match
                     else:
                         if l == label:
@@ -86,8 +101,11 @@ class Iteration_Problem():
                     if "*" in l:
                         l = l.replace("*", "")
                         if l in label:
-                            chgs.append(c)
-                            chg_set = True
+                            # Wildcard only for numbers in labels
+                            # Else N* would match every N and Ni
+                            if label.replace(l, "").isdigit():
+                                chgs.append(c)
+                                chg_set = True
                     #Exact match charges
                     else:
                         if l == label:
@@ -95,6 +113,12 @@ class Iteration_Problem():
                             chg_set = True
                 if not chg_set:
                     chgs.append(0)
+                oxidation_states[label] = chgs[-1]
+                if el not in avg_el_charges.keys():
+                    avg_el_charges[el] = [chgs[-1],]
+                else:
+                    avg_el_charges[el].append(chgs[-1])
+
             #Identify sites that are not fixed and have combinatios to iterate over and store them
             if not fixed and (len(site.species.as_dict()) > 1 or
                               abs(list(site.species.as_dict().values())[0]-1.0) > 10e-5):
@@ -119,7 +143,8 @@ class Iteration_Problem():
                 if max_q < 1:
                     max_q = 1
                 self.const_sites.append(True)
-        # Prepare q  array for use with Fortran function
+
+        # Prepare q array for use with Fortran function
         self.q = np.zeros((len(self.coords), max_q))
         for i, q_site in enumerate(q):
             for j, q_species in enumerate(q_site):
@@ -142,74 +167,50 @@ class Iteration_Problem():
                             break
                     if coord_id >= 0:
                         self.species_site_map[coord_id, ii, :] = [i+1,j+1]
-
-        out = "\n"
-        all_combinations = []
-
-        oxidation_states = {}
-        for site in self.struct.sites:
-            # Average oxidation state for all species in a site
-            for el, fra in site.species.get_el_amt_dict().items():
-                oxidation_state = 0
-                # Create label for different elements as shared sites have only label
-                # of last element+number by default
-                label_num = re.findall(r'\d+', site.label)[-1]
-                label = el + label_num
-                # Iterate over charges given by user
-                for l, c in self.charges.items():
-                    # Wildcarde charges
-                    if "*" in l:
-                        l = l.replace("*", "")
-                        if l in label:
-                            oxidation_state += c
-                    # Exact match charges
-                    else:
-                        if l == label:
-                            oxidation_state += c
-                    oxidation_states[label] = oxidation_state
-
         for label, oxidation_state in oxidation_states.items():
             line = "Using oxidation state of " + str(oxidation_state) + " for site " + label + "\n"
             out += line
         out += "\n"
 
-        composition = {}
-        for i, site in enumerate(self.struct.sites):
-            for el, fra in site.species.get_el_amt_dict().items():
-                if el not in composition.keys():
-                    composition[el] = fra
-                else:
-                    composition[el] += fra
         line = ""
         total_charge = 0
+        total_amounts = {}
         for el, fra in composition.items():
             line += el + str(int(fra + 0.5)) + " "
-            for l, c in self.charges.items():
-                if el in l:
-                    total_charge += int(fra + 0.5) * c
-                    break
+            total_amounts[el] = int(fra + 0.5)
+            total_charge += np.sum(avg_el_charges[el])/len(avg_el_charges[el])*int(fra + 0.5)
         out += "The desired composition is: " + line + "\n"
-        out += "The total charge of the supecell is: " + str(total_charge) + "\n\n"
+        out += "The total charge of the supercell is: " + str(total_charge) + "\n\n"
 
         inf_site_combinations = False
+        placed_amounts = {}
         for label, it_site in self.iterate_sites.items():
             line = "Found iterative site " + label + " with:\n"
             out += line
             num_ions = []
-            for el, occ in it_site.site.species.as_dict().items():
+            for el, occ in it_site.site.species.get_el_amt_dict().items(): #as_dict().items():
                 line = ("Place " + str(int(occ * it_site.num + 0.5)) + " ions of " + el + " in "
                         + str(it_site.num) + " positions.\n")
                 out += line
+                if not el in placed_amounts.keys():
+                    placed_amounts[el] = int(occ * it_site.num + 0.5)
+                else:
+                    placed_amounts[el] += int(occ * it_site.num + 0.5)
                 num_ions.append(int(occ * it_site.num + 0.5))
 
             if sum(num_ions) > it_site.num:
-                raise "It seems ocupations result in exactly xx.5 ions and mathematical rounding would cause over-occupation of the site. This case is not defined, please provide proper occupations."
+                self.occ_error = True
+                print("---------------------------------------------------------------------------")
+                print("WARNING: Occupancies of " + label + " could not be matched in your supercell.")
+                print("---------------------------------------------------------------------------")
+                print()
+                break
             try:
                 combinations = np.float128(1)
                 for num_ion in num_ions:
-                    combinations *= np.float128(np.math.factorial(num_ion))
-                combinations *= np.float128(np.math.factorial(it_site.num - sum(num_ions)))
-                combinations = np.log10(np.float128(np.math.factorial(it_site.num)) / combinations)
+                    combinations *= np.float128(math.factorial(num_ion))
+                combinations *= np.float128(math.factorial(it_site.num - sum(num_ions)))
+                combinations = np.log10(np.float128(math.factorial(it_site.num)) / combinations)
                 all_combinations.append(combinations)
                 line = "Site has " + str(combinations) + " log10(combinations).\n\n"
             except ValueError as e:
@@ -221,26 +222,35 @@ class Iteration_Problem():
                     raise e
             out += line
         out += "\n"
-        if not inf_site_combinations:
-            try:
-                total_combinations = np.float128(1)
-                for i in range(len(all_combinations)):
-                    total_combinations *= np.power(10, all_combinations[i])
-                total_combinations = np.log10(total_combinations)
-                line = "Total log10(configurations) of the problem are: " + str(total_combinations) + ".\n"
-            except ValueError as e:
-                if "Exceeds the limit" in str(e):
+        for el in placed_amounts.keys():
+            if total_amounts[el] != placed_amounts[el]:
+                self.occ_error =True
+                print("---------------------------------------------------------------------------")
+                print("WARNING: Occupancies of " + el + " could not be matched in your supercell.")
+                print("---------------------------------------------------------------------------")
+                print()
+                break
+        if not self.occ_error:
+            if not inf_site_combinations:
+                try:
                     total_combinations = np.float128(1)
-                    line = "Total log10(configurations) of the problem are: +INF.\n"
-                else:
-                    raise e
-        else:
-            total_combinations = np.float128(1)
-            line = "Total log10(configurations) of the problem are: +INF.\n"
-        out += line
-        self.total_combinations = total_combinations
-        self.total_charge = total_charge
-        self.out = out
+                    for i in range(len(all_combinations)):
+                        total_combinations *= np.power(10, all_combinations[i])
+                    total_combinations = np.log10(total_combinations)
+                    line = "Total log10(configurations) of the problem are: " + str(total_combinations) + ".\n"
+                except ValueError as e:
+                    if "Exceeds the limit" in str(e):
+                        total_combinations = np.float128(1)
+                        line = "Total log10(configurations) of the problem are: +INF.\n"
+                    else:
+                        raise e
+            else:
+                total_combinations = np.float128(1)
+                line = "Total log10(configurations) of the problem are: +INF.\n"
+            out += line
+            self.total_combinations = total_combinations
+            self.total_charge = total_charge
+            self.out = out
 
     def calc_coulomb_matrices(self):
         """Function to calculate the different Coulomb contributions Const, Self, Alpha, Beta"""

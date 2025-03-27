@@ -187,10 +187,10 @@ class Random_Solver(Solver):
                                                self.opt["stop_steps_no_improve"], self.opt["ga_write_steps"])
 
         if self.name in ["Random-BB", "Random-LM", "Random-MC", "Random-SA", "Random-REMC"]:
-            out_energies = np.zeros(max(self.n, self.write))
+            out_energies = np.zeros(self.write)
             out_energies += np.inf
             shape = list(best_solutions.shape)
-            shape[0] = max(self.n, self.write)
+            shape[0] = self.write
             out_solutions = np.zeros(tuple(shape))
             if self.opt["samples"] > 1:
                 for j in range(self.opt["samples"]):
@@ -218,14 +218,20 @@ class Random_Solver(Solver):
         # Getting n-best solutions, writing their cif files and a summary txt
         out = "Filename.cif \t\t E / eV\n"
 
+        is_nan = False
         for sol in range(len(out_energies)):
             name = out_name + "-" + str(sol) + ".cif"
             if sol < self.write:
                 if not self.problem.print_solution_cif_fotran(name=name, x=out_solutions[sol]):
-                    name = "NaN"
+                    is_nan = True
+            if not is_nan:
+                out += name + " \t\t " + str(round(out_energies[sol], 5)) + "\n"
             else:
-                name = "NaN"
-            out += name + " \t\t " + str(round(out_energies[sol], 5)) + "\n"
+                out += ("No more solutions to print. "
+                        "To obtain more solutions, increase samples in the options file or "
+                        "deactivate/change tol in the options file. tol -1 prints also solutions "
+                        "that are same in energy.")
+                break
 
         # Write summary tx with cif-file names and energies
         f = open(out_name + "-summary.txt", "w")
