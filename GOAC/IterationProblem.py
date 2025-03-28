@@ -59,6 +59,7 @@ class Iteration_Problem():
         self.const_sites = []
         q = []
         max_q = 0
+        sigma = []
         out = "\n"
         all_combinations = []
         oxidation_states = {}
@@ -70,6 +71,7 @@ class Iteration_Problem():
             fixed = False
             fras = []
             chgs = []
+            sigmas = []
             for el, fra in site.species.get_el_amt_dict().items():
                 if el not in composition.keys():
                     composition[el] = fra
@@ -104,16 +106,19 @@ class Iteration_Problem():
                             # Wildcard only for numbers in labels
                             # Else N* would match every N and Ni
                             if label.replace(l, "").isdigit():
-                                chgs.append(c)
+                                chgs.append(c[0])
+                                sigmas.append(c[1])
                                 chg_set = True
                     #Exact match charges
                     else:
                         if l == label:
-                            chgs.append(c)
+                            chgs.append(c[0])
+                            sigmas.append(c[1])
                             chg_set = True
                 if not chg_set:
                     chgs.append(0)
-                oxidation_states[label] = chgs[-1]
+                    sigmas.append(-1)
+                oxidation_states[label] = [chgs[-1], sigmas[-1]]
                 if el not in avg_el_charges.keys():
                     avg_el_charges[el] = [chgs[-1],]
                 else:
@@ -124,6 +129,7 @@ class Iteration_Problem():
                               abs(list(site.species.as_dict().values())[0]-1.0) > 10e-5):
                 #Append vector for charges
                 q.append(chgs)
+                sigma.append(sigmas)
                 if len(chgs) > max_q:
                     max_q = len(chgs)
                 self.num_species_site.append(len(chgs))
@@ -139,16 +145,21 @@ class Iteration_Problem():
             else:
                 #Append avg. charge to q
                 q.append([np.sum(np.array(chgs)*np.array(fras)),])
+                sigma.append([np.sum(np.array(sigmas)*np.array(fras)),])
                 self.num_species_site.append(1)
                 if max_q < 1:
                     max_q = 1
                 self.const_sites.append(True)
 
-        # Prepare q array for use with Fortran function
+        # Prepare q and sigma array for use with Fortran function
         self.q = np.zeros((len(self.coords), max_q))
         for i, q_site in enumerate(q):
             for j, q_species in enumerate(q_site):
                 self.q[i,j] = q_species
+        self.sigma = np.zeros((len(self.coords), max_q))
+        for i, s_site in enumerate(sigma):
+            for j, s_species in enumerate(s_site):
+                self.sigma[i,j] = s_species
 
         self.coords = np.array(self.coords)
         self.num_species_site = np.array(self.num_species_site)
@@ -168,9 +179,18 @@ class Iteration_Problem():
                     if coord_id >= 0:
                         self.species_site_map[coord_id, ii, :] = [i+1,j+1]
         for label, oxidation_state in oxidation_states.items():
-            line = "Using oxidation state of " + str(oxidation_state) + " for site " + label + "\n"
+            line = "Using oxidation state of " + str(oxidation_state[0]) + " for site " + label + "\n"
             out += line
         out += "\n"
+
+        if np.max(self.sigma) > 0:
+            for label, oxidation_state in oxidation_states.items():
+                if oxidation_state[1] < 0:
+                    line = "Using point-charge for site " + label + "\n"
+                else:
+                    line = "Using smeared charge with width of " + str(oxidation_state[1]) + " Ang for site " + label + "\n"
+                out += line
+            out += "\n"
 
         line = ""
         total_charge = 0
@@ -257,7 +277,7 @@ class Iteration_Problem():
         start = time.time()
         print("Started Coulomb matrices calculation")
 
-        self.const, self.alpha, self.beta, self.a = ABCEwald.ewald.getabc(r=self.coords, q=self.q,
+        self.const, self.alpha, self.beta, self.a = ABCEwald.ewald.getabc(r=self.coords, q=self.q, sigma=self.sigma,
                                                                   lat=self.struct.lattice.as_dict()["matrix"],
                                                                   alpha=-1, cutoff_real=-1, cutoff_fourier=-1, acc=1E-10,
                                                                   species_site_map=self.species_site_map,

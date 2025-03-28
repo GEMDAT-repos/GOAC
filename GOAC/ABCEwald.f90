@@ -1,12 +1,3 @@
-!__author__ = "Konstantin Koester"
-!__copyright__ = "Copyright 2024, GOAC"
-!__credits__ = ["Konstantin Koester", "Tobias Binninger", "Payam Kaghazch"]
-!__license__ = "MIT"
-!__version__ = "0.1.0"
-!__maintainer__ = ""
-!__email__ = "p.kaghazchi@fz-juelich.de"
-!__status__ = "Development"
-
 module Ewald
     implicit none
     private     
@@ -14,7 +5,7 @@ module Ewald
                         
 contains
 
-subroutine getABC(n, r, q, lat, alpha, cutoff_real, cutoff_fourier, acc, species_site_map, &
+subroutine getABC(n, r, q, sigma, lat, alpha, cutoff_real, cutoff_fourier, acc, species_site_map, &
                   num_species_site, max_num_species, const_sites, num_species, max_site_num, c, a, b, alpha_out)
         implicit none
         integer, intent(in):: n, max_num_species, num_species_site(n), num_species, max_site_num, &
@@ -23,12 +14,12 @@ subroutine getABC(n, r, q, lat, alpha, cutoff_real, cutoff_fourier, acc, species
         !f2py            num_species_map, site_species_map
         logical, intent(in):: const_sites(n)
         !f2py intent(in) const_sites
-        real(kind=8), intent(in):: r(n,3), q(n,max_num_species), lat(3,3), acc
-        !f2py intent(in) r, q, lat, acc
+        real(kind=8), intent(in):: r(n,3), q(n,max_num_species), sigma(n,max_num_species), lat(3,3), acc
+        !f2py intent(in) r, q, sigma, lat, acc
         real(kind=8), intent(inout):: alpha, cutoff_real, cutoff_fourier
         !f2py intent(inout) alpha, cutoff_real, cutoff_fourier
         integer:: i, ii, j, jj
-        real(kind=8):: em(n, max_num_species, n, max_num_species)
+        real(kind=8):: em(n, max_num_species, n, max_num_species), eta(n,max_num_species)
         real(kind=8), intent(out):: c, a(num_species, max_site_num), &
                                     b(num_species, max_site_num, num_species, max_site_num), alpha_out
         !f2py intent(out) c, a, b, alpha_out
@@ -36,8 +27,21 @@ subroutine getABC(n, r, q, lat, alpha, cutoff_real, cutoff_fourier, acc, species
         c = 0.d0
         a = 0.d0
         b = 0.d0
+        if(maxval(sigma) .gt. 0.d0) then
+                do i=1, n
+                do ii=1, max_num_species
+                        if(sigma(i,ii) .gt. 0.d0)  then
+                                eta(i,ii) = 1.d0/(sqrt(2.d0)*sigma(i,ii))
+                        else
+                                eta(i,ii) = 1.d0/acc !Set eta to some large value for point charge
+                        end if
+                end do
+                end do
+        else
+                eta = -1.d0
+        end if
 
-        call matrix(n, r, q, lat, alpha, cutoff_real, cutoff_fourier, acc, max_num_species, num_species_site, em, alpha_out)
+        call matrix(n, r, q, eta, lat, alpha, cutoff_real, cutoff_fourier, acc, max_num_species, num_species_site, em, alpha_out)
         
         do i=1, n
         do j=1, n
@@ -68,16 +72,18 @@ subroutine getABC(n, r, q, lat, alpha, cutoff_real, cutoff_fourier, acc, species
         return
 end subroutine getABC       
 
-subroutine matrix(n, r, q, lat, alpha, cutoff_real, cutoff_fourier, acc, max_num_species, num_species_site, em, alpha_out)
+subroutine matrix(n, r, q, eta, lat, alpha, cutoff_real, cutoff_fourier, acc, max_num_species, num_species_site, &
+                  em, alpha_out)
         !$ use omp_lib
         implicit none
         integer, intent(in):: n, max_num_species, num_species_site(n)
-        real(kind=8), intent(in):: r(n,3), q(n,max_num_species), lat(3,3), acc
+        real(kind=8), intent(in):: r(n,3), q(n,max_num_species), eta(n,max_num_species), lat(3,3), acc
         real(kind=8), intent(inout):: alpha, cutoff_real, cutoff_fourier
         integer:: i, ii, j, jj, x, y, z, ys, zs, g_counter, k, ds_real(3), ds_fourier(3)
-        real(kind=8):: lens(3), rj(3), dist, val_f, val_r, v, invdet, f_lat(3,3), g(3)
+        real(kind=8):: lens(3), rj(3), dist, val_f, val_r(max_num_species, max_num_species), v, &
+                       invdet, f_lat(3,3), g(3)
         real(kind=8), allocatable:: gs(:,:), g2s(:)
-        logical:: first
+        logical:: first, use_eta
         real(kind=8):: e_realm(n, max_num_species, n, max_num_species), &
                        e_fourierm(n, max_num_species, n, max_num_species), &
                        e_selfm(n, max_num_species, n, max_num_species)
@@ -88,6 +94,8 @@ subroutine matrix(n, r, q, lat, alpha, cutoff_real, cutoff_fourier, acc, max_num
         e_realm = 0.d0
         e_fourierm = 0.d0
         e_selfm = 0.d0
+        use_eta = .FALSE.
+        if(eta(1,1) .gt. 0.d0) use_eta = .TRUE.
        
         !Get Lattice parameter length and volume 
         do i=1,3
@@ -168,7 +176,18 @@ subroutine matrix(n, r, q, lat, alpha, cutoff_real, cutoff_fourier, acc, max_num
                                 rj = r(j,:) + lat(1,:)*x + lat(2,:)*y + lat(3,:)*z
                                 dist = norm2(r(i,:)-rj)
                                 if(dist .le. cutoff_real) then
-                                        val_r = val_r + erfc(alpha*dist)/dist
+                                        if(use_eta) then
+                                                val_r = val_r + erfc(alpha*dist)/dist
+                                                do ii=1, num_species_site(i)
+                                                do jj=1, num_species_site(j)
+                                                        val_r(ii,jj) = val_r(ii,jj) - & 
+                                                        erfc(eta(i,ii)*eta(j,jj)/sqrt(eta(i,ii)**2.d0+eta(j,jj)**2.d0) &
+                                                        *dist)/dist
+                                                end do
+                                                end do
+                                        else
+                                                val_r(1,1) = val_r(1,1) + erfc(alpha*dist)/dist
+                                        end if
                                 end if 
                         end do
                         end do
@@ -179,7 +198,11 @@ subroutine matrix(n, r, q, lat, alpha, cutoff_real, cutoff_fourier, acc, max_num
                                 do jj=1, num_species_site(j)
                                         e_fourierm(i,ii,j,jj) = val_f*q(i,ii)*q(j,jj)
                                         e_fourierm(j,jj,i,ii) = e_fourierm(i,ii,j,jj)
-                                        e_realm(i,ii,j,jj) = val_r*q(i,ii)*q(j,jj)
+                                        if(use_eta) then
+                                                e_realm(i,ii,j,jj) = val_r(ii,jj)*q(i,ii)*q(j,jj)
+                                        else
+                                                e_realm(i,ii,j,jj) = val_r(1,1)*q(i,ii)*q(j,jj)
+                                        end if
                                         e_realm(j,jj,i,ii) = e_realm(i,ii,j,jj)
                                 end do
                         end do

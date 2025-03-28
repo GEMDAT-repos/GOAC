@@ -76,16 +76,34 @@ def input_parser():
     if options.properties is None:
         return
     for property in options.properties:
-        if "=" not in property:
-            raise "Invalid property given. Properties must contain '='."
-        property = property.split("=")
+        if ":" not in property:
+            raise "Invalid property given. Properties must contain ':'."
+        property = property.split(":")
         if "fixed" == property[1]:
             fixed_sites.append(property[0])
         else:
+            if "=" not in property[1]:
+                raise "Invalid property value given. Property values must be 'fixed', 'c=' for charges or 's=' for smearing."
+            value = property[1].split("=")
+            if value[0] != "c" and value[0] != "s":
+                raise "Invalid property value given. Property values must 'c=' for charges or 's=' for smearing."
             try:
-                charges[property[0]] = float(property[1])
+                if value[0] == 'c':
+                    if property[0] not in charges.keys():
+                        charges[property[0]] = [float(value[1]), -1]
+                    else:
+                        if charges[property[0]][0] != 0:
+                            print("Warning: Multiple charges given for " + property[0] + ".")
+                        charges[property[0]][0] = float(value[1])
+                if value[0] == 's':
+                    if property[0] not in charges.keys():
+                        charges[property[0]] = [0, float(value[1])]
+                    else:
+                        if charges[property[0]][1] != -1:
+                            print("Warning: Multiple smearings given for " + property[0] + ".")
+                        charges[property[0]][1] = float(value[1])
             except ValueError as verr:
-                raise "Properties must be either 'fixed' for fixing sites or floats for charges."
+                raise "Charges and Smearings must be numeric values."
     return
 
 
