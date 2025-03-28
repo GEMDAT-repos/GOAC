@@ -31,7 +31,7 @@ cd ..
 
 To test your installation, run the following command:
 ```sh
-python3 GOAC/ -f LCO.cif -p "Li*=1.0" -p "Co*=3.5" -p "O*=-2.0" -s "random-mc" -n 4 -w 1
+python3 GOAC/ -f LCO.cif -p "Li*:c=1.0" -p "Co*:c=3.5" -p "O*:c=-2.0" -s "random-mc" -n 4 -w 1
 ```
 Depending on your system you should obtain an optimized cif "out-0.cif" and a file "out-summary.txt" within a few seconds. For more advanced usage of the GOAC code please have a look at the Documentation PDF file in this repository.
 
