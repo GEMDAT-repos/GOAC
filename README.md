@@ -6,7 +6,7 @@ Details on how to use GOAC as command line tool or directly from own Python code
 
 ## Installation
 
-Install a Python3 environment on your system along with a Fortran compiler (e.g., gfortran) and a corresponding OpenMP library.
+Install a Python3 environment and meson on your system along with a Fortran compiler (e.g., gfortran) and a corresponding OpenMP library.
 
 ### Requirements:
 
