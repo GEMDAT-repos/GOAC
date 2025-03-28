@@ -461,6 +461,7 @@ class Iteration_Problem():
                 warnings.simplefilter("ignore")
                 cifWriter = CifWriter(struct)
                 cifWriter.write_file(name)
+        return added_species
 
 
     def print_solution_cif_fotran(self, name: str, x):
