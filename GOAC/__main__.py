@@ -45,7 +45,7 @@ def input_parser():
     p.add_option('--out-name', '-o', help="The out-name is written in front of all output-files", dest="out_name",
                  default="out", type="string")
     p.add_option('--write', '-w', help="Set number of cif files that will be written", dest="write",
-                 default=0, type="int")
+                 default=1, type="int")
     p.add_option('--write_energy', '-a', help="Write files with energy data.", dest="write_energy",
                  default=False, action='store_true')
     p.add_option('--write_part_struct', '-b', help="Write structures to calculate energy data",
@@ -113,9 +113,9 @@ def main():
             "##################################################################\n"
             "#*#                                                            #*#\n"
             "#*#                   o-o    o-o     O      o-o                #*#\n" 
-            "#*#                  o      o   o   / \    /                   #*#\n" 
+            "#*#                  o      o   o   / \\    /                   #*#\n" 
             "#*#                  |  -o  |   |  o---o  O                    #*#\n" 
-            "#*#                  o   |  o   o  |   |   \                   #*#\n" 
+            "#*#                  o   |  o   o  |   |   \\                   #*#\n" 
             "#*#                   o-o    o-o   o   o    o-o                #*#\n"
             "#*#                                                            #*#\n"
             "#*# Global Optimization of Atomistic Configurations by Coulomb #*#\n"
