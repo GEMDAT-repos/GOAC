@@ -187,11 +187,10 @@ class Random_Solver(Solver):
                                                self.opt["stop_steps_no_improve"], self.opt["ga_write_steps"])
 
         if self.name in ["Random-BB", "Random-LM", "Random-MC", "Random-SA", "Random-REMC"]:
-            out_energies = np.zeros(self.write)
-            out_energies += np.inf
             shape = list(best_solutions.shape)
-            shape[0] = self.write
             out_solutions = np.zeros(tuple(shape))
+            out_energies = np.zeros(shape[0])
+            out_energies += np.inf
             if self.opt["samples"] > 1:
                 for j in range(self.opt["samples"]):
                     for i in range(self.n):
@@ -204,7 +203,7 @@ class Random_Solver(Solver):
                     if lowest_energies[i, 0] < np.max(out_energies):
                         if np.min(np.abs(out_energies - lowest_energies[i, 0])) > self.opt["tol"]:
                             out_solutions[np.argmax(out_energies)] = lowest_solutions[i, 0]
-                            out_energies[np.argmax(out_energies)] = lowest_energies[i,0]
+                            out_energies[np.argmax(out_energies)] = lowest_energies[i, 0]
         else:
             out_energies = best_energies
             out_solutions = best_solutions
@@ -224,8 +223,13 @@ class Random_Solver(Solver):
             if sol < self.write:
                 if not self.problem.print_solution_cif_fotran(name=name, x=out_solutions[sol]):
                     is_nan = True
+            else:
+                name = "NaN"
             if not is_nan:
-                out += name + " \t\t " + str(round(out_energies[sol], 5)) + "\n"
+                if out_energies[sol] < 10E100:
+                    out += name + " \t\t " + str(round(out_energies[sol], 5)) + "\n"
+                else:
+                    is_nan = True
             else:
                 out += ("No more solutions to print. "
                         "To obtain more solutions, increase samples in the options file or "

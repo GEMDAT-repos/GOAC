@@ -94,8 +94,13 @@ class Greedy_Solver(Solver):
             if sol < self.write:
                 if not self.problem.print_solution_cif_fotran(name=name, x=out_solutions[sol]):
                     is_nan = True
+            else:
+                name = "NaN"
             if not is_nan:
-                out += name + " \t\t " + str(round(out_energies[sol], 5)) + "\n"
+                if out_energies[sol] < 10E100:
+                    out += name + " \t\t " + str(round(out_energies[sol], 5)) + "\n"
+                else:
+                    is_nan = True
             else:
                 out += ("No more solutions to print. "
                         "To obtain more solutions, increase samples in the options file or "

@@ -127,6 +127,8 @@ class Gurobi_Solver(Solver):
             if sol < self.write:
                 if not self.problem.print_solution_cif_gurobi(name=name, x=x):
                     is_nan = True
+            else:
+                name = "NaN"
             if not is_nan:
                 out += name + " \t\t " + str(round(self.model.PoolObjVal, 5)) + "\n"
             else:
