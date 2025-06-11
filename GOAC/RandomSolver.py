@@ -188,6 +188,7 @@ class Random_Solver(Solver):
 
         if self.name in ["Random-BB", "Random-LM", "Random-MC", "Random-SA", "Random-REMC"]:
             shape = list(best_solutions.shape)
+            shape[0] = self.n*self.opt["samples"]
             out_solutions = np.zeros(tuple(shape))
             out_energies = np.zeros(shape[0])
             out_energies += np.inf
