@@ -2,7 +2,7 @@
 
 GOAC is a Python-based command line tool to approach optimization of Coulomb energies for crystall structures with configurational disorders, e.g., partial site occupations. GOAC's core consists of serveral Fortran based heurstics that allow for parallelization by OpenMP. Moreover, GOAC can be used to wrap Atomistic Configuration problems to existing software such as Gurobi. Thereby, GOAC is, to the best of our knowledege, at its publication (2024) among the most powerful software for optimizing atomistic configuration problems by Coulomb energies.
 
-Details on how to use GOAC as command line tool or directly from own Python code can be found in the Documentation PDF file and scientific details are availabe in the corresponding publication under: https://doi.org/10.48550/arXiv.2409.08808
+Details on how to use GOAC as command line tool or directly from own Python code can be found in the Documentation PDF file and scientific details are availabe in the corresponding publication under: https://doi.org/10.1038/s41524-025-01690-7
 
 ## Installation
 
