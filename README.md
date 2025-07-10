@@ -38,7 +38,7 @@ Depending on your system you should obtain an optimized cif "out-0.cif" and a fi
 
 ## Citing GOAC for your Research
 
-If you find GOAC helpful for your research, please considere citing the packages GOAC is working with as well as citing the GOAC code directly by the following reference: https://doi.org/10.48550/arXiv.2409.08808
+If you find GOAC helpful for your research, please considere citing the packages GOAC is working with as well as citing the GOAC code directly by the following reference: https://doi.org/10.1038/s41524-025-01690-7
 
 
 ## License
