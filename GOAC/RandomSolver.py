@@ -30,6 +30,9 @@ class Random_Solver(Solver):
             f = open(options, "r")
             for line in f.readlines():
                 line = line.strip().split()
+                # skip empty lines in options file
+                if len(line) < 1:
+                    continue
                 if line[0].casefold() == "mc_kt":
                     if len(line) > 2:
                         self.opt[line[0].casefold()] = []
