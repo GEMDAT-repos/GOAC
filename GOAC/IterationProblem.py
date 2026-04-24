@@ -242,14 +242,14 @@ class Iteration_Problem():
                     raise e
             out += line
         out += "\n"
-        for el in placed_amounts.keys():
-            if total_amounts[el] < placed_amounts[el]:
-                self.occ_error =True
-                print("---------------------------------------------------------------------------")
-                print("WARNING: Occupancies of " + el + " could not be matched in your supercell.")
-                print("---------------------------------------------------------------------------")
-                print()
-                break
+        #for el in placed_amounts.keys():
+        #    if total_amounts[el] < placed_amounts[el]:
+        #        self.occ_error =True
+        #        print("---------------------------------------------------------------------------")
+        #        print("WARNING: Occupancies of " + el + " could not be matched in your supercell.")
+        #        print("---------------------------------------------------------------------------")
+        #        print()
+        #        break
         if not self.occ_error:
             if not inf_site_combinations:
                 try:
