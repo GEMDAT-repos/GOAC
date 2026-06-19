@@ -1,0 +1,26 @@
+#!/bin/bash -x
+#SBATCH --account=jiek12
+#SBATCH --job-name=O1
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=128
+#SBATCH --cpus-per-task=1
+#SBATCH --output=out.%j
+#SBATCH --error=err.%j
+#SBATCH --time=00:20:00
+
+# *** start of job script ***
+# Note: The current working directory at this point is
+# the directory where sbatch was executed.
+
+module load Stages/2024
+module load Intel/2023.2.1
+module load imkl/2023.2.0
+module load IntelMPI/2021.10.0
+module load HDF5/1.14.2
+
+
+VASPHOME=/p/project/jiek12/VASP/vasp.6.4.3_installed
+export OMP_NUM_THREADS=1
+export MKL_NUM_THREADS=1
+
+srun --exact --ntasks-per-node=128 --cpus-per-task=1 --threads-per-core=1 $VASPHOME/jureca_cpu.mpi/vasp.std

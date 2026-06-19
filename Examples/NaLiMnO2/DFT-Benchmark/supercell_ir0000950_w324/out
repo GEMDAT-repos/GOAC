@@ -1,0 +1,125 @@
+ running  128 mpi-ranks, on    1 nodes
+ distrk:  each k-point on   64 cores,    2 groups
+ distr:  one band on    4 cores,   16 groups
+ vasp.6.4.3 19Mar24 (build Mar 26 2024 19:43:34) complex                        
+  
+ POSCAR found type information on POSCAR MnLiNaO 
+ POSCAR found :  4 types and     108 ions
+ Reading from existing POTCAR
+ -----------------------------------------------------------------------------
+|                                                                             |
+|           W    W    AA    RRRRR   N    N  II  N    N   GGGG   !!!           |
+|           W    W   A  A   R    R  NN   N  II  NN   N  G    G  !!!           |
+|           W    W  A    A  R    R  N N  N  II  N N  N  G       !!!           |
+|           W WW W  AAAAAA  RRRRR   N  N N  II  N  N N  G  GGG   !            |
+|           WW  WW  A    A  R   R   N   NN  II  N   NN  G    G                |
+|           W    W  A    A  R    R  N    N  II  N    N   GGGG   !!!           |
+|                                                                             |
+|     You use a magnetic or noncollinear calculation, but did not specify     |
+|     the initial magnetic moment with the MAGMOM tag. Note that a            |
+|     default of 1 will be used for all atoms. This ferromagnetic setup       |
+|     may break the symmetry of the crystal, in particular it may rule        |
+|     out finding an antiferromagnetic solution. Thence, we recommend         |
+|     setting the initial magnetic moment manually or verifying carefully     |
+|     that this magnetic setup is desired.                                    |
+|                                                                             |
+ -----------------------------------------------------------------------------
+
+ scaLAPACK will be used
+ -----------------------------------------------------------------------------
+|                                                                             |
+|           W    W    AA    RRRRR   N    N  II  N    N   GGGG   !!!           |
+|           W    W   A  A   R    R  NN   N  II  NN   N  G    G  !!!           |
+|           W    W  A    A  R    R  N N  N  II  N N  N  G       !!!           |
+|           W WW W  AAAAAA  RRRRR   N  N N  II  N  N N  G  GGG   !            |
+|           WW  WW  A    A  R   R   N   NN  II  N   NN  G    G                |
+|           W    W  A    A  R    R  N    N  II  N    N   GGGG   !!!           |
+|                                                                             |
+|     For optimal performance we recommend to set                             |
+|       NCORE = 2 up to number-of-cores-per-socket                            |
+|     NCORE specifies how many cores store one orbital (NPAR=cpu/NCORE).      |
+|     This setting can greatly improve the performance of VASP for DFT.       |
+|     The default, NCORE=1 might be grossly inefficient on modern             |
+|     multi-core architectures or massively parallel machines. Do your        |
+|     own testing! More info at https://www.vasp.at/wiki/index.php/NCORE      |
+|     Unfortunately you need to use the default for GW and RPA                |
+|     calculations (for HF NCORE is supported but not extensively tested      |
+|     yet).                                                                   |
+|                                                                             |
+ -----------------------------------------------------------------------------
+
+ Reading from existing POTCAR
+ -----------------------------------------------------------------------------
+|                                                                             |
+|               ----> ADVICE to this user running VASP <----                  |
+|                                                                             |
+|     You have a (more or less) 'large supercell' and for larger cells it     |
+|     might be more efficient to use real-space projection operators.         |
+|     Therefore, try LREAL= Auto in the INCAR file.                           |
+|     Mind: For very accurate calculation, you might also keep the            |
+|     reciprocal projection scheme (i.e. LREAL=.FALSE.).                      |
+|                                                                             |
+ -----------------------------------------------------------------------------
+
+ LDA part: xc-table for (Slater+PW92), standard interpolation
+ POSCAR, INCAR and KPOINTS ok, starting setup
+ FFT: planning ... GRIDC
+ FFT: planning ... GRID_SOFT
+ FFT: planning ... GRID
+ WAVECAR not read
+ entering main loop
+       N       E                     dE             d eps       ncg     rms          rms(c)
+RMM:   1     0.595819657078E+04    0.59582E+04   -0.16558E+05  1408   0.117E+03
+RMM:   2     0.164655741021E+04   -0.43116E+04   -0.43009E+04  1408   0.318E+02
+RMM:   3     0.642134371690E+03   -0.10044E+04   -0.96315E+03  1408   0.211E+02
+RMM:   4     0.396393466425E+01   -0.63817E+03   -0.45522E+03  1408   0.243E+02
+RMM:   5    -0.358153399675E+03   -0.36212E+03   -0.29535E+03  1408   0.143E+02
+RMM:   6    -0.563724738605E+03   -0.20557E+03   -0.15499E+03  1408   0.132E+02
+RMM:   7    -0.688428301520E+03   -0.12470E+03   -0.10159E+03  1408   0.779E+01
+RMM:   8    -0.749817848757E+03   -0.61390E+02   -0.49480E+02  1408   0.745E+01
+RMM:   9    -0.827870154340E+03   -0.78052E+02   -0.71729E+02  4409   0.404E+01
+RMM:  10    -0.832325273515E+03   -0.44551E+01   -0.34836E+01  4765   0.744E+00
+RMM:  11    -0.832987798311E+03   -0.66252E+00   -0.48004E+00  4753   0.231E+00
+RMM:  12    -0.833221343092E+03   -0.23354E+00   -0.21831E+00  4771   0.111E+00    0.121E+02
+RMM:  13    -0.149689002193E+04   -0.66367E+03   -0.32024E+03  5632   0.161E+02    0.603E+02
+RMM:  14    -0.993351218308E+03    0.50354E+03   -0.43700E+02  5456   0.566E+01    0.284E+02
+RMM:  15    -0.659658180887E+03    0.33369E+03   -0.62419E+02  5614   0.405E+01    0.734E+01
+RMM:  16    -0.696010281803E+03   -0.36352E+02   -0.35233E+01  5203   0.126E+01    0.123E+02
+RMM:  17    -0.638525808580E+03    0.57484E+02   -0.15846E+01  4554   0.871E+00    0.693E+01
+RMM:  18    -0.625856063329E+03    0.12670E+02   -0.10483E+01  4397   0.696E+00    0.598E+01
+RMM:  19    -0.623975050017E+03    0.18810E+01   -0.93729E+00  4222   0.667E+00    0.690E+01
+RMM:  20    -0.616862583441E+03    0.71125E+01   -0.62398E+00  4288   0.504E+00    0.466E+01
+RMM:  21    -0.615758852030E+03    0.11037E+01   -0.45560E+00  4230   0.478E+00    0.479E+01
+RMM:  22    -0.614057747387E+03    0.17011E+01   -0.40654E+00  4153   0.441E+00    0.389E+01
+RMM:  23    -0.613004901968E+03    0.10528E+01   -0.16389E+00  3788   0.293E+00    0.360E+01
+RMM:  24    -0.611938871140E+03    0.10660E+01   -0.53937E-01  3767   0.160E+00    0.278E+01
+RMM:  25    -0.613109336308E+03   -0.11705E+01   -0.39254E-01  3646   0.144E+00    0.307E+01
+RMM:  26    -0.613607482262E+03   -0.49815E+00   -0.30738E-01  3701   0.131E+00    0.283E+01
+RMM:  27    -0.614666292849E+03   -0.10588E+01   -0.73580E-01  4201   0.182E+00    0.279E+01
+RMM:  28    -0.614999629435E+03   -0.33334E+00   -0.88320E-01  4347   0.210E+00    0.276E+01
+RMM:  29    -0.615285203412E+03   -0.28557E+00   -0.75596E-01  4288   0.182E+00    0.231E+01
+RMM:  30    -0.616703659407E+03   -0.14185E+01   -0.96683E-01  4388   0.184E+00    0.223E+01
+RMM:  31    -0.617530510460E+03   -0.82685E+00   -0.67422E-01  4302   0.182E+00    0.249E+01
+RMM:  32    -0.617739860350E+03   -0.20935E+00   -0.16694E-01  3826   0.101E+00    0.237E+01
+RMM:  33    -0.618199176174E+03   -0.45932E+00   -0.27516E-01  4096   0.123E+00    0.244E+01
+RMM:  34    -0.618414481916E+03   -0.21531E+00   -0.29364E-01  4232   0.121E+00    0.206E+01
+RMM:  35    -0.619623881657E+03   -0.12094E+01   -0.12775E+00  5025   0.224E+00    0.274E+01
+RMM:  36    -0.619196269732E+03    0.42761E+00   -0.42637E-01  4349   0.155E+00    0.202E+01
+RMM:  37    -0.619207479998E+03   -0.11210E-01   -0.30294E-01  4297   0.125E+00    0.219E+01
+RMM:  38    -0.619182373669E+03    0.25106E-01   -0.59447E-02  3720   0.631E-01    0.207E+01
+RMM:  39    -0.619092587976E+03    0.89786E-01   -0.59304E-02  3883   0.560E-01    0.195E+01
+RMM:  40    -0.618796519509E+03    0.29607E+00   -0.17723E-01  4358   0.961E-01    0.150E+01
+RMM:  41    -0.618667947880E+03    0.12857E+00   -0.91457E-02  4235   0.635E-01    0.143E+01
+RMM:  42    -0.618607484505E+03    0.60463E-01   -0.48745E-02  3941   0.458E-01    0.137E+01
+RMM:  43    -0.618557079386E+03    0.50405E-01   -0.49075E-02  4044   0.482E-01    0.136E+01
+RMM:  44    -0.618444944535E+03    0.11213E+00   -0.70241E-02  4293   0.530E-01    0.132E+01
+RMM:  45    -0.618316678205E+03    0.12827E+00   -0.59942E-02  4247   0.480E-01    0.123E+01
+RMM:  46    -0.618251218994E+03    0.65459E-01   -0.23367E-02  3895   0.325E-01    0.121E+01
+RMM:  47    -0.618259591621E+03   -0.83726E-02   -0.10816E-02  3781   0.216E-01    0.120E+01
+RMM:  48    -0.618240500398E+03    0.19091E-01   -0.20416E-02  4192   0.298E-01    0.117E+01
+RMM:  49    -0.618198427118E+03    0.42073E-01   -0.83429E-03  3779   0.201E-01    0.115E+01
+RMM:  50    -0.618199431330E+03   -0.10042E-02   -0.17256E-03  3372   0.872E-02    0.115E+01
+RMM:  51    -0.618179942622E+03    0.19489E-01   -0.58354E-03  4230   0.150E-01    0.113E+01
+RMM:  52    -0.618180026290E+03   -0.83667E-04   -0.10285E-03  3236   0.829E-02    0.115E+01
+RMM:  53    -0.618180025608E+03    0.68160E-06   -0.26040E-04  2347   0.483E-02
+   1 F= -.61818003E+03 E0= -.61814431E+03  d E =-.714258E-01  mag=    55.4559

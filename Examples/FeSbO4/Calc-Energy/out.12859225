@@ -1,0 +1,37 @@
+################################################################
+################################################################
+#*#                                                          #*#
+#*#                 o-o    o-o     O      o-o                #*#
+#*#                o      o   o   / \    /                   #*#
+#*#                |  -o  |   |  o---o  O                    #*#
+#*#                o   |  o   o  |   |   \                   #*#
+#*#                 o-o    o-o   o   o    o-o                #*#
+#*#                                                          #*#
+#*# Global Optimization of Atomistic Arrangements by Coulomb #*#
+#*#                                                          #*#
+#*#                     Konstantin Köster                    #*#
+#*#                                                          #*#
+################################################################
+################################################################
+
+
+Using oxidation state of 3.0 for site Fe1
+Using oxidation state of 5.0 for site Sb1
+Using oxidation state of -2.0 for site O1
+
+The desired composition is: Fe126 Sb126 O504 
+The total charge of the supecell is: 0.0
+
+Found iterative site Sb1 with:
+Place 126 ions of Fe3+ in 252 positions.
+Place 126 ions of Sb5+ in 252 positions.
+Site has 74.56036785184785324 log10(combinations).
+
+
+Total log10(combinations) of the problem are: 74.56036785184785324.
+
+Started Coulomb matrices calculation
+Finished Coulomb matrices calculations in: 155s
+
+Creating solver of type: Random
+Solver finished in 0.0s

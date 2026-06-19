@@ -1,0 +1,90 @@
+
+Using oxidation state of 1.0 for site Na0
+Using oxidation state of 4.0 for site Mn0
+Using oxidation state of 1.0 for site Li0
+Using oxidation state of -1.9074074074074 for site O0
+
+Found iterative site Na0 with:
+Place 22 ions of Na in 27 positions.
+Site has 4.907034952483417 log10(combinations).
+
+Found iterative site Li0 with:
+Place 18 ions of Mn in 27 positions.
+Place 9 ions of Li in 27 positions.
+Site has 6.670878737827183 log10(combinations).
+
+
+Total log10(combinations) of the problem are: 11.5779136903106.
+
+Started Coulomb matrices calculation
+Finished Coulomb matrices calculations in: 8s
+
+Creating solver of type: Gurobi
+Set parameter Presolve to value 2
+Set parameter MIPFocus to value 2
+Set parameter MIPGap to value 0
+Set parameter MIPGapAbs to value 0
+Set parameter Threads to value 128
+Set parameter PoolSearchMode to value 2
+Set parameter PoolSolutions to value 1
+
+Statistics for model Coulomb:
+  Linear constraint matrix    : 30 Constrs, 81 Vars, 135 NZs
+  Variable types              : 0 Continuous,
+81 Integer (81 Binary)
+  Matrix coefficient range    : [ 1, 1 ]
+  Objective coefficient range : [ 0.223021, 16.8523 ]
+  Variable bound range        : [ 1, 1 ]
+  RHS coefficient range       : [ 1, 22 ]
+Gurobi Optimizer version 11.0.0 build v11.0.0rc2 (linux64 - "Rocky Linux 8.9 (Green Obsidian)")
+
+CPU model: AMD EPYC 7742 64-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 128 physical cores, 256 logical processors, using up to 128 threads
+
+Optimize a model with 30 rows, 81 columns and 135 nonzeros
+Model fingerprint: 0xa43fd16d
+Model has 3240 quadratic objective terms
+Variable types: 0 continuous, 81 integer (81 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+00]
+  Objective range  [2e-01, 2e+01]
+  QObjective range [7e-01, 6e+01]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 2e+01]
+Found heuristic solution: objective -2462.418381
+Presolve removed 28 rows and 27 columns
+Presolve time: 0.01s
+Presolved: 2 rows, 54 columns, 54 nonzeros
+Presolved model has 1485 quadratic objective terms
+Variable types: 0 continuous, 54 integer (54 binary)
+Found heuristic solution: objective -2558.972215
+Root relaxation presolved: 2 rows, 54 columns, 54 nonzeros
+Root relaxation presolved model has 1485 quadratic objective terms
+
+
+Root relaxation: objective -2.715068e+03, 92 iterations, 0.00 seconds (0.00 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 -2715.0680    0   54 -2558.9722 -2715.0680  6.10%     -    0s
+H    0     0                    -2576.244692 -2715.0680  5.39%     -    0s
+H    0     0                    -2577.797605 -2715.0680  5.33%     -    0s
+H    0     0                    -2579.421654 -2715.0680  5.26%     -    0s
+     0     0 -2705.4327    0   54 -2579.4217 -2705.4327  4.89%     -    0s
+H    0     0                    -2582.049227 -2705.4327  4.78%     -    0s
+H    0     2                    -2582.489962 -2705.4327  4.76%     -    0s
+     0     2 -2705.4327    0   54 -2582.4900 -2705.4327  4.76%     -    0s
+H    7    16                    -2601.827785 -2703.0689  3.89%   1.7    0s
+H   31    64                    -2608.563042 -2693.8254  3.27%   2.2    0s
+H   38    64                    -2609.653447 -2693.8254  3.23%   2.3    0s
+ 428288 10512 -2609.6836   35   26 -2609.6534 -2612.5757  0.11%   3.1    5s
+
+Explored 459241 nodes (1396209 simplex iterations) in 5.31 seconds (3.43 work units)
+Thread count was 128 (of 256 available processors)
+
+Solution count 1: -2609.65 
+No other solutions better than -2609.65
+
+Optimal solution found (tolerance 0.00e+00)
+Best objective -2.609653446524e+03, best bound -2.609653446524e+03, gap 0.0000%

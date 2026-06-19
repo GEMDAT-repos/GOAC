@@ -1,0 +1,122 @@
+################################################################
+################################################################
+#*#                                                          #*#
+#*#                 o-o    o-o     O      o-o                #*#
+#*#                o      o   o   / \    /                   #*#
+#*#                |  -o  |   |  o---o  O                    #*#
+#*#                o   |  o   o  |   |   \                   #*#
+#*#                 o-o    o-o   o   o    o-o                #*#
+#*#                                                          #*#
+#*# Global Optimization of Atomistic Arrangements by Coulomb #*#
+#*#                                                          #*#
+#*#                     Konstantin Köster                    #*#
+#*#                                                          #*#
+################################################################
+################################################################
+
+
+Using oxidation state of 1.0 for site Na1
+Using oxidation state of -1.0 for site Cl1
+
+The desired composition is: Na108 Cl108 
+The total charge of the supecell is: 0.0
+
+Found iterative site Cl1 with:
+Place 108 ions of Na in 216 positions.
+Place 108 ions of Cl in 216 positions.
+Site has 63.7566895954746084 log10(combinations).
+
+
+Total log10(combinations) of the problem are: 63.756689595474608404.
+
+Reading energies from files, any given oxidation states will be ignored!
+Creating solver of type: Random-REMC
+ Solution:           1 Step:      300000 kT:  0.10000000000000001      Current-Energy:  -838.33285856981342      Lowest-Energy:  -838.33285856981342      CPU-TIME:   5.7009520000000000     
+ Solution:           1 Step:      300000 kT:  0.29999999999999999      Current-Energy:  -832.02554813759730      Lowest-Energy:  -832.02554813759730      CPU-TIME:   11.643134999999999     
+ Solution:           1 Step:      300000 kT:  0.59999999999999998      Current-Energy:  -877.62480178353769      Lowest-Energy:  -877.62480178353769      CPU-TIME:   17.517252999999997     
+ Solution:           1 Step:      300000 kT:   1.0000000000000000      Current-Energy:  -967.16929090799442      Lowest-Energy:  -967.16929090799442      CPU-TIME:   22.965662000000002     
+ Exchange: Solution:           1 kT1:  0.10000000000000001      kT2:  0.59999999999999998     
+ Exchange: Solution:           1 kT1:  0.10000000000000001      kT2:   1.0000000000000000     
+ Exchange: Solution:           1 kT1:  0.29999999999999999      kT2:  0.59999999999999998     
+ Exchange: Solution:           1 kT1:  0.29999999999999999      kT2:   1.0000000000000000     
+ Exchange: Solution:           1 kT1:  0.59999999999999998      kT2:   1.0000000000000000     
+ GLOBAL-MINIMUM:  -967.16929090799442     
+ Solution:           1 Step:      600000 kT:  0.10000000000000001      Current-Energy:  -967.16929090799442      Lowest-Energy:  -967.16929090799442      CPU-TIME:   28.265146000000001     
+ Solution:           1 Step:      600000 kT:  0.29999999999999999      Current-Energy:  -877.62480178353769      Lowest-Energy:  -877.62480178353769      CPU-TIME:   34.031966000000004     
+ Solution:           1 Step:      600000 kT:  0.59999999999999998      Current-Energy:  -868.86533239817732      Lowest-Energy:  -877.62480178353769      CPU-TIME:   39.800467000000005     
+ Solution:           1 Step:      600000 kT:   1.0000000000000000      Current-Energy:  -918.44474006174369      Lowest-Energy:  -967.16929090799442      CPU-TIME:   45.670107999999999     
+ Exchange: Solution:           1 kT1:  0.29999999999999999      kT2:   1.0000000000000000     
+ Exchange: Solution:           1 kT1:  0.59999999999999998      kT2:   1.0000000000000000     
+ GLOBAL-MINIMUM:  -967.16929090799442     
+ Solution:           1 Step:      900000 kT:  0.10000000000000001      Current-Energy:  -967.16929090799442      Lowest-Energy:  -967.16929090799442      CPU-TIME:   50.981534000000003     
+ Solution:           1 Step:      900000 kT:  0.29999999999999999      Current-Energy:  -918.44474006174369      Lowest-Energy:  -918.44474006174369      CPU-TIME:   56.872212000000005     
+ Solution:           1 Step:      900000 kT:  0.59999999999999998      Current-Energy:  -904.88680110609937      Lowest-Energy:  -904.88680110609937      CPU-TIME:   62.628889000000001     
+ Solution:           1 Step:      900000 kT:   1.0000000000000000      Current-Energy:  -936.88581921434036      Lowest-Energy:  -967.16929090799442      CPU-TIME:   68.313457999999997     
+ Exchange: Solution:           1 kT1:  0.29999999999999999      kT2:   1.0000000000000000     
+ Exchange: Solution:           1 kT1:  0.59999999999999998      kT2:   1.0000000000000000     
+ GLOBAL-MINIMUM:  -967.16929090799442     
+ Solution:           1 Step:     1200000 kT:  0.10000000000000001      Current-Energy:  -967.16929090799442      Lowest-Energy:  -967.16929090799442      CPU-TIME:   73.636115000000004     
+ Solution:           1 Step:     1200000 kT:  0.29999999999999999      Current-Energy:  -936.88581921434036      Lowest-Energy:  -936.88581921434036      CPU-TIME:   79.099993999999995     
+ Solution:           1 Step:     1200000 kT:  0.59999999999999998      Current-Energy:  -925.88050028536884      Lowest-Energy:  -925.88050028536884      CPU-TIME:   84.982039999999998     
+ Solution:           1 Step:     1200000 kT:   1.0000000000000000      Current-Energy:  -904.88680110609937      Lowest-Energy:  -967.16929090799442      CPU-TIME:   90.717582000000007     
+ GLOBAL-MINIMUM:  -967.16929090799442     
+ Solution:           1 Step:     1500000 kT:  0.10000000000000001      Current-Energy:  -967.16929090799442      Lowest-Energy:  -967.16929090799442      CPU-TIME:   96.018090999999998     
+ Solution:           1 Step:     1500000 kT:  0.29999999999999999      Current-Energy:  -936.88581921434036      Lowest-Energy:  -936.88581921434036      CPU-TIME:   101.48454700000001     
+ Solution:           1 Step:     1500000 kT:  0.59999999999999998      Current-Energy:  -937.27067387769966      Lowest-Energy:  -937.27067387769966      CPU-TIME:   107.00858600000001     
+ Solution:           1 Step:     1500000 kT:   1.0000000000000000      Current-Energy:  -904.79257498132722      Lowest-Energy:  -967.16929090799442      CPU-TIME:   112.57347400000000     
+ Exchange: Solution:           1 kT1:  0.29999999999999999      kT2:  0.59999999999999998     
+ GLOBAL-MINIMUM:  -967.16929090799442     
+ Solution:           1 Step:     1800000 kT:  0.10000000000000001      Current-Energy:  -967.16929090799442      Lowest-Energy:  -967.16929090799442      CPU-TIME:   117.90214400000001     
+ Solution:           1 Step:     1800000 kT:  0.29999999999999999      Current-Energy:  -937.27067387769966      Lowest-Energy:  -937.27067387769966      CPU-TIME:   123.43668300000000     
+ Solution:           1 Step:     1800000 kT:  0.59999999999999998      Current-Energy:  -967.16929090804638      Lowest-Energy:  -967.16929090804638      CPU-TIME:   128.74056300000001     
+ Solution:           1 Step:     1800000 kT:   1.0000000000000000      Current-Energy:  -904.79257498132722      Lowest-Energy:  -967.16929090799442      CPU-TIME:   134.29725200000001     
+ Exchange: Solution:           1 kT1:  0.10000000000000001      kT2:  0.59999999999999998     
+ Exchange: Solution:           1 kT1:  0.29999999999999999      kT2:  0.59999999999999998     
+ GLOBAL-MINIMUM:  -967.16929090804638     
+ Solution:           1 Step:     2100000 kT:  0.10000000000000001      Current-Energy:  -967.16929090804638      Lowest-Energy:  -967.16929090804638      CPU-TIME:   139.39222900000001     
+ Solution:           1 Step:     2100000 kT:  0.29999999999999999      Current-Energy:  -967.16929090799442      Lowest-Energy:  -967.16929090799442      CPU-TIME:   144.70491100000001     
+ Solution:           1 Step:     2100000 kT:  0.59999999999999998      Current-Energy:  -937.27067387769966      Lowest-Energy:  -967.16929090804638      CPU-TIME:   150.22712899999999     
+ Solution:           1 Step:     2100000 kT:   1.0000000000000000      Current-Energy:  -904.79257498132722      Lowest-Energy:  -967.16929090799442      CPU-TIME:   155.78124500000001     
+ Exchange: Solution:           1 kT1:  0.10000000000000001      kT2:  0.29999999999999999     
+ GLOBAL-MINIMUM:  -967.16929090804638     
+ Solution:           1 Step:     2400000 kT:  0.10000000000000001      Current-Energy:  -967.16929090799442      Lowest-Energy:  -967.16929090804638      CPU-TIME:   161.08407700000001     
+ Solution:           1 Step:     2400000 kT:  0.29999999999999999      Current-Energy:  -967.16929090804638      Lowest-Energy:  -967.16929090804638      CPU-TIME:   166.18463399999999     
+ Solution:           1 Step:     2400000 kT:  0.59999999999999998      Current-Energy:  -937.27067387769966      Lowest-Energy:  -967.16929090804638      CPU-TIME:   171.72812900000000     
+ Solution:           1 Step:     2400000 kT:   1.0000000000000000      Current-Energy:  -904.79257498132722      Lowest-Energy:  -967.16929090799442      CPU-TIME:   177.29151899999999     
+ Exchange: Solution:           1 kT1:  0.10000000000000001      kT2:  0.29999999999999999     
+ GLOBAL-MINIMUM:  -967.16929090804638     
+ Solution:           1 Step:     2700000 kT:  0.10000000000000001      Current-Energy:  -967.16929090804638      Lowest-Energy:  -967.16929090804638      CPU-TIME:   182.40410600000001     
+ Solution:           1 Step:     2700000 kT:  0.29999999999999999      Current-Energy:  -967.16929090799442      Lowest-Energy:  -967.16929090804638      CPU-TIME:   187.71853800000000     
+ Solution:           1 Step:     2700000 kT:  0.59999999999999998      Current-Energy:  -937.27067387769966      Lowest-Energy:  -967.16929090804638      CPU-TIME:   193.25356199999999     
+ Solution:           1 Step:     2700000 kT:   1.0000000000000000      Current-Energy:  -904.79257498132722      Lowest-Energy:  -967.16929090799442      CPU-TIME:   198.79005599999999     
+ Exchange: Solution:           1 kT1:  0.10000000000000001      kT2:  0.29999999999999999     
+ GLOBAL-MINIMUM:  -967.16929090804638     
+ Solution:           1 Step:     3000000 kT:  0.10000000000000001      Current-Energy:  -967.16929090799442      Lowest-Energy:  -967.16929090804638      CPU-TIME:   204.10260299999999     
+ Solution:           1 Step:     3000000 kT:  0.29999999999999999      Current-Energy:  -967.16929090804638      Lowest-Energy:  -967.16929090804638      CPU-TIME:   209.20609899999999     
+ Solution:           1 Step:     3000000 kT:  0.59999999999999998      Current-Energy:  -937.27067387769966      Lowest-Energy:  -967.16929090804638      CPU-TIME:   214.71515300000002     
+ Solution:           1 Step:     3000000 kT:   1.0000000000000000      Current-Energy:  -904.79257498132722      Lowest-Energy:  -967.16929090799442      CPU-TIME:   220.27125599999999     
+ Exchange: Solution:           1 kT1:  0.10000000000000001      kT2:  0.29999999999999999     
+ GLOBAL-MINIMUM:  -967.16929090804638     
+ Solution:           1 Step:     3300000 kT:  0.10000000000000001      Current-Energy:  -967.16929090804638      Lowest-Energy:  -967.16929090804638      CPU-TIME:   225.37979600000000     
+ Solution:           1 Step:     3300000 kT:  0.29999999999999999      Current-Energy:  -967.16929090799442      Lowest-Energy:  -967.16929090804638      CPU-TIME:   230.70038700000001     
+ Solution:           1 Step:     3300000 kT:  0.59999999999999998      Current-Energy:  -937.27067387769966      Lowest-Energy:  -967.16929090804638      CPU-TIME:   236.22550300000000     
+ Solution:           1 Step:     3300000 kT:   1.0000000000000000      Current-Energy:  -904.79257498132722      Lowest-Energy:  -967.16929090799442      CPU-TIME:   241.78850100000000     
+ Exchange: Solution:           1 kT1:  0.10000000000000001      kT2:  0.29999999999999999     
+ GLOBAL-MINIMUM:  -967.16929090804638     
+ Solution:           1 Step:     3600000 kT:  0.10000000000000001      Current-Energy:  -967.16929090799442      Lowest-Energy:  -967.16929090804638      CPU-TIME:   247.11226400000001     
+ Solution:           1 Step:     3600000 kT:  0.29999999999999999      Current-Energy:  -967.16929090804638      Lowest-Energy:  -967.16929090804638      CPU-TIME:   252.20109400000001     
+ Solution:           1 Step:     3600000 kT:  0.59999999999999998      Current-Energy:  -937.27067387769966      Lowest-Energy:  -967.16929090804638      CPU-TIME:   257.71317099999999     
+ Solution:           1 Step:     3600000 kT:   1.0000000000000000      Current-Energy:  -904.88680110609937      Lowest-Energy:  -967.16929090799442      CPU-TIME:   263.44917199999998     
+ Exchange: Solution:           1 kT1:  0.10000000000000001      kT2:  0.29999999999999999     
+ GLOBAL-MINIMUM:  -967.16929090804638     
+ Solution:           1 Step:     3900000 kT:  0.10000000000000001      Current-Energy:  -967.16929090804638      Lowest-Energy:  -967.16929090804638      CPU-TIME:   268.56264399999998     
+ Solution:           1 Step:     3900000 kT:  0.29999999999999999      Current-Energy:  -967.16929090799442      Lowest-Energy:  -967.16929090804638      CPU-TIME:   273.90316199999995     
+ Solution:           1 Step:     3900000 kT:  0.59999999999999998      Current-Energy:  -937.27067387769966      Lowest-Energy:  -967.16929090804638      CPU-TIME:   279.44213299999996     
+ Solution:           1 Step:     3900000 kT:   1.0000000000000000      Current-Energy:  -905.68026396854350      Lowest-Energy:  -967.16929090799442      CPU-TIME:   285.18348599999996     
+ Exchange: Solution:           1 kT1:  0.10000000000000001      kT2:  0.29999999999999999     
+ GLOBAL-MINIMUM:  -967.16929090804638     
+ Solution:           1 Step:     4200000 kT:  0.10000000000000001      Current-Energy:  -967.16929090799442      Lowest-Energy:  -967.16929090804638      CPU-TIME:   290.49970499999995     
+ Solution:           1 Step:     4200000 kT:  0.29999999999999999      Current-Energy:  -967.16929090804638      Lowest-Energy:  -967.16929090804638      CPU-TIME:   295.60344299999997     
+ Solution:           1 Step:     4200000 kT:  0.59999999999999998      Current-Energy:  -937.27067387769966      Lowest-Energy:  -967.16929090804638      CPU-TIME:   301.13430399999999     
+ GLOBAL-MINIMUM:  -967.16929090804638     
+Solver finished in 302.0s

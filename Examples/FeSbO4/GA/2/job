@@ -1,0 +1,15 @@
+#!/bin/bash -x
+#SBATCH --job-name=GOAC
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --cpus-per-task=128
+#SBATCH --output=out.%j
+#SBATCH --error=err.%j
+#SBATCH --time=04:00:00
+
+export SRUN_CPUS_PER_TASK=${SLURM_CPUS_PER_TASK}
+export OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK}
+export OMP_NESTED=true
+export PYTHONUNBUFFERED=true
+
+srun python3 ../../../../GOAC/ -f ../../FeSbO4.cif -e "3x3x14" -s "random-ga" -p "Fe*:c=3.0" -p "Sb*:c=5.0" -p "O*:c=-2.0" -n 2048 -w 1 -y options

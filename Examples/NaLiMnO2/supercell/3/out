@@ -1,0 +1,79 @@
+-----------------------------------------------------
+-            Supercell program (v2.1)               -
+-         https://orex.github.io/supercell/         -
+-----------------------------------------------------
+-      Authors:   * Kirill Okhotnikov               -
+-                  (kirill.okhotnikov@gmail.com)    -
+-                 * Sylvian Cadars                  -
+-                  (sylvian.cadars@cnrs-imn.fr)     -
+-                 * Thibault Charpentier            -
+-                  (Thibault.Charpentier@cea.fr)    -
+-----------------------------------------------------
+-  please cite:                                     -
+-    K. Okhotnikov, T. Charpentier and S. Cadars    -
+-    J. Cheminform. 8 (2016) 17 – 33.               -
+-----------------------------------------------------
+
+Command line: /p/home/jusers/koester2/jureca/bin/supercell -i O1.cif -q -p Na*:c=1.0 -p Li*:c=1.0 -p Mn*:c=4.0 -p O*:c=-1.962962962963 -m -n l1 -v 2 -o coulomb-ouput.out 
+Random SEED: 1812784068
+CIF file info: 
+  INFO: Using symmetries from space group.
+  
+Manual properties
+Label	|fixed	|charge	|popul	|
+Li0	|N/A	|1	|N/A	|
+Mn0	|N/A	|4	|N/A	|
+Na0	|N/A	|1	|N/A	|
+O0	|N/A	|-1.96296	|N/A	|
+
+Initial system:
+  Chemical Formula: Li9 Mn18 Na25 O54
+
+Supercell system (1x1x1):
+  Size a=15, b=15, c=6.4
+
+Current charge balance option is "try"
+Total charge oxidation state (cif):  0
+Total charge cell:   -2.00373e-12
+Charge balancing:   yes
+----------------------------------------------------------------
+| Atom Label	| 	charge  	| mult	| occup x mult
+| 		| Ox. state	| Used	| (cif)	|		 
+----------------------------------------------------------------
+|  Li0		|  0		|  1	|  27	|  9
+|  Mn0		|  0		|  4	|  27	|  18
+|  Na0		|  0		|  1	|  27	|  25
+|  O0		|  0		|  -1.96296	|  54	|  54
+----------------------------------------------------------------
+
+Chemical formula of the supercell: Li9 Mn18 Na25 O54
+Total charge of supercell: -2.00373e-12
+
+----------------------------------------------------
+ Identification of groups of crystallographic sites 
+----------------------------------------------------
+
+ Group 1 (27 atomic positions in supercell):
+  * Site #1: Mn0 (occ. 0.666667) -> distributed over 18 positions out of 27 (actual occ.: 0.667).
+  * Site #2: Li0 (occ. 0.333333) -> distributed over 9 positions out of 27 (actual occ.: 0.333).
+  Number of combinations for the group is 4686825
+
+ Group 2 (27 atomic positions in supercell):
+  * Site #1: Na0 (occ. 0.925926) -> distributed over 25 positions out of 27 (actual occ.: 0.926).
+  Number of combinations for the group is 351
+
+ Group 3 (54 atomic positions in supercell):
+  * Site #1: O0 (occ. 1) -> FIXED with occupancy 1.000.
+
+Minimal distance between atoms of two distinct groups: 2.14483 A.
+
+-------------------------------------------------
+The total number of combinations is 1645075575(~1.6e+09)
+-------------------------------------------------
+324 symmetry operation found for supercell.
+Symmetries operation assigned to groups.
+Start Coulomb matrix (108x108) calculation.
+Coulomb matrix calculation finished.
+Finished 20.8%. Stored 1252798 configurations. Left 1241064504          Finished 79.5%. Stored 4824609 configurations. Left 87416901          
+Total enumeration time: 0:00:3.75319
+Combinations after merge: 5096628

@@ -1,0 +1,42 @@
+################################################################
+################################################################
+#*#                                                          #*#
+#*#                 o-o    o-o     O      o-o                #*#
+#*#                o      o   o   / \    /                   #*#
+#*#                |  -o  |   |  o---o  O                    #*#
+#*#                o   |  o   o  |   |   \                   #*#
+#*#                 o-o    o-o   o   o    o-o                #*#
+#*#                                                          #*#
+#*# Global Optimization of Atomistic Arrangements by Coulomb #*#
+#*#                                                          #*#
+#*#                     Konstantin Köster                    #*#
+#*#                                                          #*#
+################################################################
+################################################################
+
+
+Using oxidation state of 1.0 for site Na1
+Using oxidation state of -1.0 for site Cl1
+
+The desired composition is: Na108 Cl108 
+The total charge of the supecell is: 0.0
+
+Found iterative site Cl1 with:
+Place 108 ions of Na in 216 positions.
+Place 108 ions of Cl in 216 positions.
+Site has 63.75668959547461 log10(combinations).
+
+
+Total log10(combinations) of the problem are: 63.75668959547461.
+
+Reading energies from files, any given oxidation states will be ignored!
+Creating solver of type: Random-LM
+ CPU-TIME:   50.788629000000000      ENERGY:  -864.93145496975990     
+ CPU-TIME:   95.710783999999990      ENERGY:  -864.93145496975990     
+ CPU-TIME:   139.21619500000000      ENERGY:  -864.93145496975990     
+ CPU-TIME:   193.55626999999998      ENERGY:  -905.17758287073173     
+ CPU-TIME:   242.07333900000000      ENERGY:  -905.17758287073173     
+ CPU-TIME:   286.20267800000005      ENERGY:  -905.17758287073173     
+ CPU-TIME:   322.51462400000003      ENERGY:  -905.17758287073173     
+ CPU-TIME:   322.51465400000001      ENERGY:  -905.17758287073173     
+Solver finished in 324.0s

@@ -1,0 +1,12 @@
+# Fortran source files (needed for building extensions)
+include GOAC/GOAC.f90
+include GOAC/ABCEwald.f90
+
+# Documentation
+include README.md
+include LICENSE
+include LCO.cif
+include GOAC_Documentation.pdf
+
+# Examples
+recursive-include Examples *

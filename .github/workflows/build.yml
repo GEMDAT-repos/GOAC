@@ -1,0 +1,31 @@
+name: Build and install
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gfortran meson ninja-build
+
+      - name: Build and install the package
+        run: |
+          pip install .
+          python -c "import GOAC; print('GOAC', GOAC.__version__, 'installed OK')"
+          python -c "import ABCEwald; print('ABCEwald module loaded OK')"
+          python -c "from GOAC import greedy, random_samples; print('Fortran functions accessible OK')"

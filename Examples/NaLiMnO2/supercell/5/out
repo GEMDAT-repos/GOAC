@@ -1,0 +1,79 @@
+-----------------------------------------------------
+-            Supercell program (v2.1)               -
+-         https://orex.github.io/supercell/         -
+-----------------------------------------------------
+-      Authors:   * Kirill Okhotnikov               -
+-                  (kirill.okhotnikov@gmail.com)    -
+-                 * Sylvian Cadars                  -
+-                  (sylvian.cadars@cnrs-imn.fr)     -
+-                 * Thibault Charpentier            -
+-                  (Thibault.Charpentier@cea.fr)    -
+-----------------------------------------------------
+-  please cite:                                     -
+-    K. Okhotnikov, T. Charpentier and S. Cadars    -
+-    J. Cheminform. 8 (2016) 17 – 33.               -
+-----------------------------------------------------
+
+Command line: /p/home/jusers/koester2/jureca/bin/supercell -i O1.cif -q -p Na*:c=1.0 -p Li*:c=1.0 -p Mn*:c=4.0 -p O*:c=-1.925925925926 -m -n l1 -v 2 -o coulomb-ouput.out 
+Random SEED: 4162688862
+CIF file info: 
+  INFO: Using symmetries from space group.
+  
+Manual properties
+Label	|fixed	|charge	|popul	|
+Li0	|N/A	|1	|N/A	|
+Mn0	|N/A	|4	|N/A	|
+Na0	|N/A	|1	|N/A	|
+O0	|N/A	|-1.92593	|N/A	|
+
+Initial system:
+  Chemical Formula: Li9 Mn18 Na23 O54
+
+Supercell system (1x1x1):
+  Size a=15, b=15, c=6.4
+
+Current charge balance option is "try"
+Total charge oxidation state (cif):  0
+Total charge cell:   -4.02167e-12
+Charge balancing:   yes
+----------------------------------------------------------------
+| Atom Label	| 	charge  	| mult	| occup x mult
+| 		| Ox. state	| Used	| (cif)	|		 
+----------------------------------------------------------------
+|  Li0		|  0		|  1	|  27	|  9
+|  Mn0		|  0		|  4	|  27	|  18
+|  Na0		|  0		|  1	|  27	|  23
+|  O0		|  0		|  -1.92593	|  54	|  54
+----------------------------------------------------------------
+
+Chemical formula of the supercell: Li9 Mn18 Na23 O54
+Total charge of supercell: -3.99325e-12
+
+----------------------------------------------------
+ Identification of groups of crystallographic sites 
+----------------------------------------------------
+
+ Group 1 (27 atomic positions in supercell):
+  * Site #1: Mn0 (occ. 0.666667) -> distributed over 18 positions out of 27 (actual occ.: 0.667).
+  * Site #2: Li0 (occ. 0.333333) -> distributed over 9 positions out of 27 (actual occ.: 0.333).
+  Number of combinations for the group is 4686825
+
+ Group 2 (27 atomic positions in supercell):
+  * Site #1: Na0 (occ. 0.851852) -> distributed over 23 positions out of 27 (actual occ.: 0.852).
+  Number of combinations for the group is 17550
+
+ Group 3 (54 atomic positions in supercell):
+  * Site #1: O0 (occ. 1) -> FIXED with occupancy 1.000.
+
+Minimal distance between atoms of two distinct groups: 2.14483 A.
+
+-------------------------------------------------
+The total number of combinations is 82253778750(~8.2e+10)
+-------------------------------------------------
+324 symmetry operation found for supercell.
+Symmetries operation assigned to groups.
+Start Coulomb matrix (108x108) calculation.
+Coulomb matrix calculation finished.
+Finished 0%. Stored 34061 configurations. Left 82242791424          Finished 0.1%. Stored 227562 configurations. Left 82180569492          Finished 1.3%. Stored 3945455 configurations. Left 80977501116          Finished 2.5%. Stored 7657797 configurations. Left 79774756740          Finished 4.5%. Stored 13620160 configurations. Left 77846026050          Finished 7.2%. Stored 21859536 configurations. Left 75177587970          Finished 9.3%. Stored 28189027 configurations. Left 73127872926          Finished 10.6%. Stored 32177765 configurations. Left 71836466598          Finished 12.1%. Stored 36720051 configurations. Left 70365412314          Finished 13.7%. Stored 41656551 configurations. Left 68766711426          Finished 15.3%. Stored 46671567 configurations. Left 67142256426          Finished 15.9%. Stored 48280477 configurations. Left 66621997476          Finished 17.2%. Stored 52303246 configurations. Left 65321222850          Finished 18.6%. Stored 56566651 configurations. Left 63941392062          Finished 19.5%. Stored 59457764 configurations. Left 63006026418          Finished 19.8%. Stored 60238452 configurations. Left 62754317298          Finished 20%. Stored 60812048 configurations. Left 62569102050          Finished 20.1%. Stored 60927338 configurations. Left 62532141750          Finished 20.3%. Stored 61267374 configurations. Left 62422648380          Finished 21.6%. Stored 65469995 configurations. Left 61061729148          Finished 22.9%. Stored 69178204 configurations. Left 59861624886          Finished 24.9%. Stored 75423648 configurations. Left 57838183650          Finished 26.8%. Stored 81250746 configurations. Left 55950365250          Finished 28.3%. Stored 85718888 configurations. Left 54502890390          Finished 30.4%. Stored 92130048 configurations. Left 52425868950          Finished 31.3%. Stored 94925884 configurations. Left 51520443498          Finished 33.4%. Stored 101111192 configurations. Left 49517373276          Finished 34.9%. Stored 105718118 configurations. Left 48025644876          Finished 36.6%. Stored 110925215 configurations. Left 46339254036          Finished 38.7%. Stored 117518177 configurations. Left 44203449276          Finished 40.4%. Stored 122414136 configurations. Left 42617519172          Finished 42.1%. Stored 127721740 configurations. Left 40898993850          Finished 43.4%. Stored 131547069 configurations. Left 39660474204          Finished 44.3%. Stored 134329375 configurations. Left 38759810904          Finished 46.4%. Stored 140921605 configurations. Left 36625192470          Finished 47.5%. Stored 144052621 configurations. Left 35611464510          Finished 49.5%. Stored 150184190 configurations. Left 33625905840          Finished 51.4%. Stored 156058046 configurations. Left 31724964468          Finished 52.4%. Stored 159060758 configurations. Left 30752994114          Finished 54.4%. Stored 165034817 configurations. Left 28818907542          Finished 55.2%. Stored 167562793 configurations. Left 28000055214          Finished 56.3%. Stored 171038482 configurations. Left 26873981550          Finished 58.2%. Stored 176746018 configurations. Left 25025966550          Finished 59.8%. Stored 181490994 configurations. Left 23489568270          Finished 60.7%. Stored 184361524 configurations. Left 22560138144          Finished 61.8%. Stored 187734205 configurations. Left 21467671380          Finished 63.4%. Stored 192594771 configurations. Left 19894954320          Finished 63.9%. Stored 194118543 configurations. Left 19401285240          Finished 64.9%. Stored 197162254 configurations. Left 18416706750          Finished 65.6%. Stored 199120282 configurations. Left 17782741134          Finished 65.9%. Stored 199935333 configurations. Left 17519451930          Finished 66.5%. Stored 201942805 configurations. Left 16869731328          Finished 66.9%. Stored 203056139 configurations. Left 16509450456          Finished 67.3%. Stored 204365445 configurations. Left 16085749500          Finished 67.7%. Stored 205397418 configurations. Left 15751774350          Finished 67.9%. Stored 206128694 configurations. Left 15515280270          Finished 68.2%. Stored 207108049 configurations. Left 15198628590          Finished 68.3%. Stored 207269786 configurations. Left 15146424252          Finished 69.2%. Stored 209890174 configurations. Left 14297542956          Finished 70.2%. Stored 213062656 configurations. Left 13269799728          Finished 71.3%. Stored 216429363 configurations. Left 12179521260          Finished 72.7%. Stored 220490477 configurations. Left 10864686006          Finished 73.4%. Stored 222618552 configurations. Left 10175981400          Finished 73.9%. Stored 224277666 configurations. Left 9638635500          Finished 74.4%. Stored 225742895 configurations. Left 9164071404          Finished 74.9%. Stored 227269384 configurations. Left 8669778624          Finished 76.4%. Stored 231665532 configurations. Left 7246640700          Finished 77.3%. Stored 234424642 configurations. Left 6353498250          Finished 77.5%. Stored 235098078 configurations. Left 6135462450          Finished 77.8%. Stored 235879201 configurations. Left 5882610906          Finished 77.9%. Stored 236210814 configurations. Left 5775607638          Finished 78%. Stored 236566164 configurations. Left 5660664750          Finished 78.3%. Stored 237540588 configurations. Left 5345183682          Finished 78.8%. Stored 239050172 configurations. Left 4856541300          Finished 79.1%. Stored 239771327 configurations. Left 4623616080          Finished 79.2%. Stored 239974166 configurations. Left 4558489650          Finished 79.6%. Stored 241148221 configurations. Left 4178154150          Finished 80.2%. Stored 243067839 configurations. Left 3556554642          Finished 80.9%. Stored 244978316 configurations. Left 2937767130          Finished 81.2%. Stored 246090524 configurations. Left 2577796650          Finished 81.5%. Stored 246776509 configurations. Left 2355765930          Finished 82.1%. Stored 248711195 configurations. Left 1729674486          Finished 82.3%. Stored 249388043 configurations. Left 1510682400          Finished 82.8%. Stored 250924665 configurations. Left 1013244066          Finished 83.2%. Stored 251935800 configurations. Left 686187450          Finished 83.3%. Stored 252117656 configurations. Left 627430050          Finished 83.4%. Stored 252521714 configurations. Left 496647450          Finished 83.7%. Stored 252779510 configurations. Left 413249850          Finished 83.8%. Stored 253076452 configurations. Left 318006000          Finished 84.2%. Stored 253095130 configurations. Left 312003900          Finished 84.4%. Stored 253598442 configurations. Left 150421050          Finished 84.6%. Stored 254009416 configurations. Left 17743050          Finished 84.7%. Stored 254061354 configurations. Left 1158300          Finished 85.2%. Stored 254064360 configurations. Left 210600          Finished 86.1%. Stored 254064360 configurations. Left 210600          Finished 87.2%. Stored 254064906 configurations. Left 52650          Finished 88.3%. Stored 254064906 configurations. Left 52650          Finished 89.4%. Stored 254065128 configurations. Left 0          Finished 90.5%. Stored 254065128 configurations. Left 0          Finished 91.7%. Stored 254065128 configurations. Left 0          Finished 92.9%. Stored 254065128 configurations. Left 0          Finished 94.1%. Stored 254065128 configurations. Left 0          Finished 95.3%. Stored 254065128 configurations. Left 0          Finished 96.5%. Stored 254065128 configurations. Left 0          Finished 97.7%. Stored 254065128 configurations. Left 0          Finished 98.9%. Stored 254065128 configurations. Left 0          
+Total enumeration time: 0:01:58.6002
+Combinations after merge: 254065128

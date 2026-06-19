@@ -1,0 +1,94 @@
+
+Using oxidation state of 1.0 for site Na0
+Using oxidation state of 4.0 for site Mn0
+Using oxidation state of 1.0 for site Li0
+Using oxidation state of -1.851851851852 for site O0
+
+Found iterative site Na0 with:
+Place 19 ions of Na in 27 positions.
+Site has 6.34636764631368 log10(combinations).
+
+Found iterative site Li0 with:
+Place 18 ions of Mn in 27 positions.
+Place 9 ions of Li in 27 positions.
+Site has 6.670878737827183 log10(combinations).
+
+
+Total log10(combinations) of the problem are: 13.017246384140863.
+
+Started Coulomb matrices calculation
+Finished Coulomb matrices calculations in: 8s
+
+Creating solver of type: Gurobi
+Set parameter Presolve to value 2
+Set parameter MIPFocus to value 2
+Set parameter MIPGap to value 0
+Set parameter MIPGapAbs to value 0
+Set parameter Threads to value 128
+Set parameter PoolSearchMode to value 2
+Set parameter PoolSolutions to value 1
+
+Statistics for model Coulomb:
+  Linear constraint matrix    : 30 Constrs, 81 Vars, 135 NZs
+  Variable types              : 0 Continuous,
+81 Integer (81 Binary)
+  Matrix coefficient range    : [ 1, 1 ]
+  Objective coefficient range : [ 0.173457, 17.0506 ]
+  Variable bound range        : [ 1, 1 ]
+  RHS coefficient range       : [ 1, 19 ]
+Gurobi Optimizer version 11.0.0 build v11.0.0rc2 (linux64 - "Rocky Linux 8.9 (Green Obsidian)")
+
+CPU model: AMD EPYC 7742 64-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 128 physical cores, 256 logical processors, using up to 128 threads
+
+Optimize a model with 30 rows, 81 columns and 135 nonzeros
+Model fingerprint: 0xda493e1c
+Model has 3240 quadratic objective terms
+Variable types: 0 continuous, 81 integer (81 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+00]
+  Objective range  [2e-01, 2e+01]
+  QObjective range [7e-01, 6e+01]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 2e+01]
+Found heuristic solution: objective -2335.378504
+Presolve removed 28 rows and 27 columns
+Presolve time: 0.01s
+Presolved: 2 rows, 54 columns, 54 nonzeros
+Presolved model has 1485 quadratic objective terms
+Variable types: 0 continuous, 54 integer (54 binary)
+Found heuristic solution: objective -2457.496852
+Root relaxation presolved: 2 rows, 54 columns, 54 nonzeros
+Root relaxation presolved model has 1485 quadratic objective terms
+
+
+Root relaxation: objective -2.626794e+03, 87 iterations, 0.00 seconds (0.00 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 -2626.7936    0   54 -2457.4969 -2626.7936  6.89%     -    0s
+H    0     0                    -2475.171968 -2626.7936  6.13%     -    0s
+H    0     0                    -2480.973346 -2626.7936  5.88%     -    0s
+H    0     0                    -2484.322454 -2626.7936  5.73%     -    0s
+     0     0 -2617.1583    0   54 -2484.3225 -2617.1583  5.35%     -    0s
+H    0     2                    -2501.878799 -2617.1583  4.61%     -    0s
+     0     2 -2617.1583    0   54 -2501.8788 -2617.1583  4.61%     -    0s
+H   31    64                    -2508.325949 -2605.5510  3.88%   2.1    0s
+H   32    64                    -2510.602142 -2605.5510  3.78%   2.1    0s
+H   43    64                    -2511.268153 -2604.2225  3.70%   2.1    0s
+H  127   256                    -2511.268154 -2598.1256  3.46%   2.2    0s
+H  256   384                    -2511.268156 -2594.1615  3.30%   2.2    0s
+ 356105 104393 -2528.7641   35   32 -2511.2682 -2533.3801  0.88%   2.7    5s
+ 799876 155255 -2522.3779   35   33 -2511.2682 -2523.9352  0.50%   2.6   10s
+ 1379106 167556 -2511.5822   44   18 -2511.2682 -2518.2502  0.28%   2.5   15s
+ 1983418 16463 -2511.3111   46    5 -2511.2682 -2512.2409  0.04%   2.4   20s
+
+Explored 2019460 nodes (4918387 simplex iterations) in 20.47 seconds (8.20 work units)
+Thread count was 128 (of 256 available processors)
+
+Solution count 1: -2511.27 
+No other solutions better than -2511.27
+
+Optimal solution found (tolerance 0.00e+00)
+Best objective -2.511268155696e+03, best bound -2.511268155696e+03, gap 0.0000%

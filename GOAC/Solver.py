@@ -1,0 +1,28 @@
+__author__ = "Konstantin Köster"
+__copyright__ = "Copyright 2024, GOAC"
+__credits__ = ["Konstantin Köster", "Tobias Binninger", "Payam Kaghazch"]
+__license__ = "MIT"
+__version__ = "0.1.0"
+__maintainer__ = ""
+__email__ = "p.kaghazchi@fz-juelich.de"
+__status__ = "Development"
+
+from IterationProblem import Iteration_Problem
+
+class Solver():
+    def __init__(self, name:str, problem:Iteration_Problem, n=1, w=False):
+        self.name = name
+        self.problem = problem
+        self.n = n
+        self.write = w
+
+        print("Creating solver of type: " + self.name)
+
+    def initialize(self, options:str=None):
+        """Function to map a coulomb problem to the specific solver
+        and to set default or user-parameters for the solver"""
+        return
+
+    def solve(self, out_name:str):
+        """Function that actually solves a coulomb problem and returns a structure+energy or a list of both"""
+        return

@@ -1,0 +1,15 @@
+#!/bin/bash -x
+#SBATCH --job-name=GOAC
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --cpus-per-task=1
+#SBATCH --output=out.%j
+#SBATCH --error=err.%j
+#SBATCH --time=00:10:00
+
+export SRUN_CPUS_PER_TASK=${SLURM_CPUS_PER_TASK}
+export OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK}
+export OMP_NESTED=false
+export PYTHONUNBUFFERED=true
+
+srun python3 ../../../../GOAC/ -f ../../NaCl.cif -p "Na*:c=1.0" -p "Cl*:c=-1.0" -s "random-hybrid" -n 1 -w 10 -y options

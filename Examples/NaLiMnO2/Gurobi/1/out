@@ -1,0 +1,87 @@
+
+Using oxidation state of 1.0 for site Na0
+Using oxidation state of 4.0 for site Mn0
+Using oxidation state of 1.0 for site Li0
+Using oxidation state of -2.0 for site O0
+
+Found iterative site Li0 with:
+Place 18 ions of Mn in 27 positions.
+Place 9 ions of Li in 27 positions.
+Site has 6.670878737827183 log10(combinations).
+
+
+Total log10(combinations) of the problem are: 6.670878737827183.
+
+Started Coulomb matrices calculation
+Finished Coulomb matrices calculations in: 7s
+
+Creating solver of type: Gurobi
+Set parameter Presolve to value 2
+Set parameter MIPFocus to value 2
+Set parameter MIPGap to value 0
+Set parameter MIPGapAbs to value 0
+Set parameter Threads to value 128
+Set parameter PoolSearchMode to value 2
+Set parameter PoolSolutions to value 1
+
+Statistics for model Coulomb:
+  Linear constraint matrix    : 29 Constrs, 54 Vars, 108 NZs
+  Variable types              : 0 Continuous,
+54 Integer (54 Binary)
+  Matrix coefficient range    : [ 1, 1 ]
+  Objective coefficient range : [ 6.36131, 43.1897 ]
+  Variable bound range        : [ 1, 1 ]
+  RHS coefficient range       : [ 1, 18 ]
+Gurobi Optimizer version 11.0.0 build v11.0.0rc2 (linux64 - "Rocky Linux 8.9 (Green Obsidian)")
+
+CPU model: AMD EPYC 7742 64-Core Processor, instruction set [SSE2|AVX|AVX2]
+Thread count: 128 physical cores, 256 logical processors, using up to 128 threads
+
+Optimize a model with 29 rows, 54 columns and 108 nonzeros
+Model fingerprint: 0x5ec0c1db
+Model has 1431 quadratic objective terms
+Variable types: 0 continuous, 54 integer (54 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+00]
+  Objective range  [6e+00, 4e+01]
+  QObjective range [7e-01, 6e+01]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 2e+01]
+Found heuristic solution: objective -2684.023723
+Presolve removed 28 rows and 27 columns
+Presolve time: 0.01s
+Presolved: 352 rows, 378 columns, 1080 nonzeros
+Variable types: 0 continuous, 378 integer (378 binary)
+Root relaxation presolved: 352 rows, 378 columns, 1080 nonzeros
+
+
+Root relaxation: objective -3.227588e+03, 180 iterations, 0.00 seconds (0.00 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 -3227.5881    0   86 -2684.0237 -3227.5881  20.3%     -    0s
+H    0     0                    -2688.459310 -3227.5881  20.1%     -    0s
+H    0     0                    -2750.392738 -3227.5881  17.4%     -    0s
+     0     0 -2901.8333    0  268 -2750.3927 -2901.8333  5.51%     -    0s
+     0     0 -2882.6461    0  337 -2750.3927 -2882.6461  4.81%     -    0s
+     0     0 -2871.8346    0  342 -2750.3927 -2871.8346  4.42%     -    0s
+     0     0 -2871.7969    0  336 -2750.3927 -2871.7969  4.41%     -    1s
+     0     2 -2871.7923    0  334 -2750.3927 -2871.7923  4.41%     -    1s
+*   75   124               6    -2780.442621 -2814.4744  1.22%   687    2s
+
+Cutting planes:
+  Lift-and-project: 2
+  Flow cover: 111
+  Zero half: 130
+  RLT: 159
+  BQP: 799
+
+Explored 339 nodes (129970 simplex iterations) in 2.70 seconds (2.21 work units)
+Thread count was 128 (of 256 available processors)
+
+Solution count 1: -2780.44 
+No other solutions better than -2780.44
+
+Optimal solution found (tolerance 0.00e+00)
+Best objective -2.780442620758e+03, best bound -2.780442620758e+03, gap 0.0000%

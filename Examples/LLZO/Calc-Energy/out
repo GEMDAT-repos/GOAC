@@ -1,0 +1,47 @@
+################################################################
+################################################################
+#*#                                                          #*#
+#*#                 o-o    o-o     O      o-o                #*#
+#*#                o      o   o   / \    /                   #*#
+#*#                |  -o  |   |  o---o  O                    #*#
+#*#                o   |  o   o  |   |   \                   #*#
+#*#                 o-o    o-o   o   o    o-o                #*#
+#*#                                                          #*#
+#*# Global Optimization of Atomistic Arrangements by Coulomb #*#
+#*#                                                          #*#
+#*#                     Konstantin Köster                    #*#
+#*#                                                          #*#
+################################################################
+################################################################
+
+
+Using oxidation state of 1.0 for site Li1
+Using oxidation state of 3.0 for site La1
+Using oxidation state of 4.0 for site Zr1
+Using oxidation state of 5.0 for site Ta1
+Using oxidation state of -2.0 for site O1
+
+The desired composition is: Li192 La95 Zr29 Ta35 O384 
+The total charge of the supecell is: 0.0
+
+Found iterative site Li1 with:
+Place 192 ions of Li in 480 positions.
+Site has 138.86686661959533 log10(combinations).
+
+Found iterative site La1 with:
+Place 95 ions of La in 96 positions.
+Site has 1.9822712330395684 log10(combinations).
+
+Found iterative site Ta1 with:
+Place 29 ions of Zr in 64 positions.
+Place 35 ions of Ta in 64 positions.
+Site has 18.142645428780305 log10(combinations).
+
+
+Total log10(combinations) of the problem are: 158.9917832814152.
+
+Started Coulomb matrices calculation
+Finished Coulomb matrices calculations in: 146s
+
+Creating solver of type: Random
+Solver finished in 0.0s

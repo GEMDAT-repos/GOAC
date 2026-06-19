@@ -1,0 +1,16 @@
+samples 1
+stop_time 180
+stop_steps_no_improve -1
+mc_steps 100000
+re_repeat 500
+mc_sim_an 1.00
+mc_sim_an_steps 1000000000
+mc_write_steps 100000
+mc_kT 0.1 0.2 0.3 0.4 0.5 0.6 0.8 1.0
+ga_steps 100000000
+generation_size 100
+pool_size 1000
+elite_size 10
+mutation_rate 0.00003
+ga_write_steps 10
+hybrid_repeat 10

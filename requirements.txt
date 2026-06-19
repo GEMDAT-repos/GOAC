@@ -1,0 +1,6 @@
+meson >= 1.6.0
+meson-python >= 0.17.1
+ninja >= 1.11.1.2
+numpy >= 1.26.2
+pymatgen >= 2023.11.12
+gurobipy >= 11.0.0
