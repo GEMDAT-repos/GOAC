@@ -3,6 +3,8 @@ requires = [
     "setuptools >= 68.0",
     "wheel",
     "numpy >= 1.26",
+    "meson >= 1.2",
+    "ninja >= 1.11",
 ]
 build-backend = "setuptools.build_meta"
 
