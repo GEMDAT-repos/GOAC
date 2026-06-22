@@ -8,6 +8,7 @@ import sys
 import subprocess
 import shutil
 import glob
+import importlib.machinery
 
 import setuptools
 from setuptools import setup
@@ -121,15 +122,25 @@ class FortranBuildExt(build_ext):
             os.chdir(old_cwd)
 
     def _find_so(self, module_name, search_dir):
-        """Find a .so file matching the given module name."""
-        pattern = os.path.join(search_dir, f"{module_name}*.so")
-        matches = glob.glob(pattern)
-        if matches:
-            return matches[0]
+        """Find a compiled extension matching the given module name.
+
+        The suffix is platform-dependent: ``.so`` on Linux/macOS and ``.pyd``
+        on Windows, so we match against every suffix CPython recognises rather
+        than hard-coding ``.so``.
+        """
+        suffixes = tuple(importlib.machinery.EXTENSION_SUFFIXES)
+
+        def _is_match(filename):
+            return filename.startswith(module_name) and filename.endswith(suffixes)
+
+        for suffix in suffixes:
+            matches = glob.glob(os.path.join(search_dir, f"{module_name}*{suffix}"))
+            if matches:
+                return matches[0]
         # Also search one level deeper (meson puts output in subdirs sometimes)
         for root, dirs, files in os.walk(search_dir):
             for f in files:
-                if f.startswith(module_name) and f.endswith(".so"):
+                if _is_match(f):
                     return os.path.join(root, f)
         return None
 

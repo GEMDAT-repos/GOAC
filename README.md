@@ -8,6 +8,23 @@ Details on how to use GOAC as command line tool or directly from own Python code
 
 ## Installation
 
+### Install from prebuilt wheels (recommended)
+
+Each [GitHub Release](https://github.com/GEMDAT-repos/GOAC/releases) ships prebuilt binary wheels for CPython 3.10–3.14 on Linux (x86_64), macOS (Apple Silicon) and Windows (64-bit), so no Fortran compiler is needed. Install GOAC from the release's assets, letting pip resolve the runtime dependencies (`numpy`, `pymatgen`, `gurobipy`) from PyPI:
+
+```sh
+pip install GOAC \
+    --find-links https://github.com/GEMDAT-repos/GOAC/releases/expanded_assets/vX.Y.Z
+```
+
+Replace `vX.Y.Z` with the release tag you want. The `--find-links` URL is the release's asset listing, which pip resolves the GOAC wheel from while pulling the dependencies from PyPI as usual.
+
+> **Note:** Do not add `--no-index`. That flag tells pip to ignore PyPI entirely, but the release page hosts only GOAC — not its dependencies — so the install would fail to resolve `numpy`/`pymatgen`/`gurobipy`. For a fully offline install you would need to additionally provide those dependencies (e.g. a second `--find-links` pointing at a local wheelhouse).
+>
+> If your platform has no matching wheel (e.g. an Intel Mac, for which no wheel is built), pip falls back to building the source distribution, which requires a Fortran compiler — see the manual build below.
+
+### Build from source
+
 Install a Python3 environment and meson on your system along with a Fortran compiler (e.g., gfortran) and a corresponding OpenMP library.
 
 ### Requirements:

@@ -47,4 +47,15 @@ goac = "GOAC.__main__:main"
 packages = ["GOAC"]
 
 [tool.setuptools.package-data]
-GOAC = ["*.so"]
+GOAC = ["*.so", "*.pyd"]
+
+[tool.cibuildwheel]
+# Build for CPython 3.10 through 3.14. PyPy and musllinux are skipped: the
+# Fortran/OpenMP toolchain story is only validated for CPython + glibc/macOS/MSVC.
+build = "cp310-* cp311-* cp312-* cp313-* cp314-*"
+skip = "pp* *-musllinux*"
+build-verbosity = 1
+
+[tool.cibuildwheel.linux]
+# manylinux images are RHEL-based; pull in gfortran (libgomp ships with gcc).
+before-all = "yum install -y gcc-gfortran || dnf install -y gcc-gfortran"
