@@ -19,6 +19,15 @@ from pymatgen.io.cif import CifWriter
 import time
 import ABCEwald
 
+def base_label(label):
+    """Return the crystallographic site label without the supercell index suffix.
+
+    Newer pymatgen (>= 2024.x) appends a unique "_<n>" suffix to each site label
+    in Structure.make_supercell (e.g. "Li1" -> "Li1_29"), even for a [1,1,1] cell.
+    GOAC groups symmetry-equivalent iterative sites by their shared label, so the
+    suffix must be stripped to restore the original grouping behaviour."""
+    return re.sub(r'_\d+$', '', label)
+
 class Iterate_Site():
     """Simple class to store  pymatgen site objects along with the number of appearances in the structure
     and coordinates of all site positions as list"""
@@ -81,7 +90,7 @@ class Iteration_Problem():
                 #Create label for different elements as shared sites have only
                 # label of last element+ number by default
                 fras.append(fra)
-                label_num = re.findall(r'\d+', site.label)[-1]
+                label_num = re.findall(r'\d+', base_label(site.label))[-1]
                 label = el + label_num
                 for l in self.fixed_sites:
                     #check for wildcard match
@@ -137,11 +146,12 @@ class Iteration_Problem():
                 #Raise error if occupations of one site are more than 1
                 if sum(list(site.species.as_dict().values())) > 1.0:
                     raise "Site " + site.label + " has an occupation greater 1."
-                if site.label not in self.iterate_sites.keys():
-                    self.iterate_sites[site.label] = Iterate_Site(site, 1)
+                it_label = base_label(site.label)
+                if it_label not in self.iterate_sites.keys():
+                    self.iterate_sites[it_label] = Iterate_Site(site, 1)
                 else:
-                    self.iterate_sites[site.label].num += 1
-                    self.iterate_sites[site.label].coords.append(site.coords)
+                    self.iterate_sites[it_label].num += 1
+                    self.iterate_sites[it_label].coords.append(site.coords)
             else:
                 #Append avg. charge to q
                 q.append([np.sum(np.array(chgs)*np.array(fras)),])
@@ -368,7 +378,7 @@ class Iteration_Problem():
         # delete all iterative sites
         delete_sites = []
         for i, site in enumerate(struct.sites):
-            if site.label in self.iterate_sites.keys():
+            if base_label(site.label) in self.iterate_sites.keys():
                 delete_sites.append(i)
         struct.remove_sites(delete_sites)
 
@@ -437,7 +447,7 @@ class Iteration_Problem():
         # delete all iterative sites
         delete_sites = []
         for i, site in enumerate(struct.sites):
-            if site.label in self.iterate_sites.keys():
+            if base_label(site.label) in self.iterate_sites.keys():
                 delete_sites.append(i)
         struct.remove_sites(delete_sites)
 
@@ -471,7 +481,7 @@ class Iteration_Problem():
         # delete all iterative sites
         delete_sites = []
         for i, site in enumerate(struct.sites):
-            if site.label in self.iterate_sites.keys():
+            if base_label(site.label) in self.iterate_sites.keys():
                 delete_sites.append(i)
         struct.remove_sites(delete_sites)
 
