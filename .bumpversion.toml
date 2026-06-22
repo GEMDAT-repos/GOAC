@@ -1,0 +1,13 @@
+# Config for bump-my-version (https://github.com/callowayproject/bump-my-version).
+# The release pipeline calls `bump-my-version replace --new-version <tag>` to set
+# pyproject.toml's version to the published release tag. current_version is the
+# baseline committed version; the search/replace below targets only the
+# [project] version line so the build-system requirement pins are left alone.
+[tool.bumpversion]
+current_version = "0.1.0"
+allow_dirty = true
+
+[[tool.bumpversion.files]]
+filename = "pyproject.toml"
+search = 'version = "{current_version}"'
+replace = 'version = "{new_version}"'
