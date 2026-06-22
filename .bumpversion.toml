@@ -4,7 +4,7 @@
 # baseline committed version; the search/replace below targets only the
 # [project] version line so the build-system requirement pins are left alone.
 [tool.bumpversion]
-current_version = "0.1.0"
+current_version = "0.1.1"
 allow_dirty = true
 
 [[tool.bumpversion.files]]
