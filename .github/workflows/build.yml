@@ -1,0 +1,67 @@
+name: Build and install
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gfortran meson ninja-build
+
+      - name: Build and install the package
+        run: |
+          pip install .
+
+      - name: Verify the installed package 
+        run: |
+          cd /tmp
+          python -c "import GOAC; print('GOAC', GOAC.__version__, 'installed OK')"
+          python -c "import ABCEwald; print('ABCEwald module loaded OK')"
+          python -c "from GOAC import greedy, random_samples; print('Fortran functions accessible OK')"
+
+  # Test that pip install works from a fresh venv without system-level
+  # meson/ninja, relying only on build-system.requires in pyproject.toml.
+  # This catches missing build dependencies like meson and ninja.
+  fresh-venv-install:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install system dependencies (Fortran only)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gfortran
+
+      - name: Create fresh venv and install from source
+        run: |
+          python -m venv /tmp/test-venv
+          source /tmp/test-venv/bin/activate
+          pip install --upgrade pip
+          # Install from the local checkout (simulates pip install git+...)
+          pip install .
+          # Verify
+          cd /tmp
+          python -c "import GOAC; print('GOAC', GOAC.__version__, 'installed OK')"
+          python -c "import ABCEwald; print('ABCEwald module loaded OK')"
+          python -c "from GOAC import greedy, random_samples; print('Fortran functions accessible OK')"
